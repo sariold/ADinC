@@ -1,41 +1,62 @@
 /* file: digitalSignals.c */
-/* author: Diego Sariol (email: d.r.sariol@student.rug.nl)
-            Rares Dobre (email: r.a.dobre@student.rugl.nl) */
+/* author: Rares Dobre (email: r.a.dobre@student.rugl.nl)
+            Diego Sariol (email: d.r.sariol@student.rug.nl) */
 /* date: 4/2/20 */
-/* version: 1.0 */
+/* version: 4.2 */
 /* Description: */
 
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "LibStack.h"
 
-void stackReader(Stack *stack, int size) {
-    int value = 0;
-    int max = 0;
-    printf("size:%d | ", size);
-    while(size > 0) {
+void printSignal(int length){
+    Stack st, stp;
+    st = newStack(length);
+    stp = newStack(length);
+    int i=1, value=0;
+    scanf("%d", &value);
+    for(int j=1; j<=value; j++){
+        push(j, &st);
+        push(0, &stp);
+    }
+    for(; i<length; i++){
         scanf("%d", &value);
-        if(value > max) max = value;
-        push(value, stack);
-        size--;
+        if(isEmptyStack(st)){                  //FIX FOR BUG
+            for(int j=1; j<=value; j++){
+                push(j, &st);
+                push(i, &stp);
+            }
+        }
+        if(st.top > 0 && value > st.array[st.top - 1]) {
+            int sentinel = st.array[st.top - 1];
+            while (value - sentinel > 0){
+                    sentinel++;
+                    push(sentinel, &st);
+                    push(i, &stp);
+            }
+        }
+        if(st.top > 0 && value < st.array[st.top - 1]){
+            while(st.top>0 && st.array[st.top - 1] > value){
+                printf("[%d,%d)@%d ", pop(&stp), i, pop(&st));
+            }
+        }
     }
-    printf("max:%d\n", max);
+    while(st.top != 0){
+        printf("[%d,%d)@%d ", pop(&stp), i, pop(&st));
+    }
+    printf("\n");
+    freeStack(st);
+    freeStack(stp);
 }
 
-void stackMakers(int total) {
-    int size = 0;
-    while(total > 0) {
-        scanf("%d", &size);
-        Stack stacko = newStack(size);
-        stackReader(&stacko, size);
-        total--;
+int main(int argc, char const *argv[]) {
+    int n=0;
+    scanf("%d", &n);
+    while(n > 0){
+        int length=0;
+        scanf("%d", &length);
+        printSignal(length);
+        n--;
     }
-}
-
-int main(int argc, char *argv[]) {
-    int totalSignals = 0;
-    scanf("%d", &totalSignals);
-    stackMakers(totalSignals);
     return 0;
 }

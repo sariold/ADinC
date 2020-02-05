@@ -1,4 +1,3 @@
-
 a.out: signals.c Lib*.h Lib*.c
 	gcc -g -O2 -std=c99 -pedantic -Wall -Wno-unused-result *.c -lm
 
