@@ -1,62 +1,71 @@
-/* file: digitalSignals.c */
+/* file: signals.c */
 /* author: Rares Dobre (email: r.a.dobre@student.rugl.nl)
             Diego Sariol (email: d.r.sariol@student.rug.nl) */
 /* date: 4/2/20 */
 /* version: 4.2 */
-/* Description: */
+/* Description: Extra task from the digital signals assignment. Reads in signal
+input and returns the original input. */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "LibStack.h"
 
-void printSignal(int length){
-    Stack st, stp;
-    st = newStack(length);
-    stp = newStack(length);
-    int i=1, value=0;
-    scanf("%d", &value);
-    for(int j=1; j<=value; j++){
-        push(j, &st);
-        push(0, &stp);
+void printSignal(int length) {
+    int total = length;
+    /* Three stacks: for starting intervals, ending intervals, and the value */
+    Stack start, end, values;
+    start = newStack(length);
+    end = newStack(length);
+    values = newStack(length);
+    int max = 0;
+    int startPos, endPos, number;
+    while(length > 0) {
+        scanf("[%d,%d)@%d ", &startPos, &endPos, &number);
+        /* Determining the max end inteveral, which reveals the number of total
+        values from the original input */
+        if(endPos > max) max = endPos;
+        push(startPos, &start);
+        push(endPos, &end);
+        push(number, &values);
+        length--;
     }
-    for(; i<length; i++){
-        scanf("%d", &value);
-        if(isEmptyStack(st)){                  //FIX FOR BUG
-            for(int j=1; j<=value; j++){
-                push(j, &st);
-                push(i, &stp);
-            }
+    int *array = calloc(max, sizeof(int));
+    printf("%d\n", max);
+    /* While loop that pops the top value off of each of the three stacks */
+    while(total > 0) {
+        int startInterval = pop(&start);
+        int endInterval = pop(&end);
+        int temp = pop(&values);
+        /* Fills up the array with latest popped value if it is greater than
+        the value already placed in the array position */
+        for(; startInterval < endInterval; startInterval++) {
+            if(temp > array[startInterval]) array[startInterval] = temp;
         }
-        if(st.top > 0 && value > st.array[st.top - 1]) {
-            int sentinel = st.array[st.top - 1];
-            while (value - sentinel > 0){
-                    sentinel++;
-                    push(sentinel, &st);
-                    push(i, &stp);
-            }
-        }
-        if(st.top > 0 && value < st.array[st.top - 1]){
-            while(st.top>0 && st.array[st.top - 1] > value){
-                printf("[%d,%d)@%d ", pop(&stp), i, pop(&st));
-            }
-        }
+        total--;
     }
-    while(st.top != 0){
-        printf("[%d,%d)@%d ", pop(&stp), i, pop(&st));
+    /* Prints out the entire array of values */
+    for(int k = 0; k < max; k++) {
+        printf("%d ", array[k]);
     }
     printf("\n");
-    freeStack(st);
-    freeStack(stp);
+    freeStack(start);
+    freeStack(end);
+    freeStack(values);
+    free(array);
 }
 
+/* Main function that reads in total number of signals, uses a while loop to
+return the original signal input from each set of intervals. */
 int main(int argc, char const *argv[]) {
-    int n=0;
-    scanf("%d", &n);
-    while(n > 0){
-        int length=0;
-        scanf("%d", &length);
+    int totalSignals = 0;
+    scanf("%d", &totalSignals);
+    printf("%d\n", totalSignals);
+    while(totalSignals > 0) {
+        int length = 0;
+        /* Length of intervals for each signal */
+        scanf("%d\n", &length);
         printSignal(length);
-        n--;
+        totalSignals--;
     }
     return 0;
 }
