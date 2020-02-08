@@ -1,6 +1,4 @@
 /* file: signals.c */
-/* author: Rares Dobre (email: r.a.dobre@student.rugl.nl)
-            Diego Sariol (email: d.r.sariol@student.rug.nl) */
 /* date: 4/2/20 */
 /* version: 4.2 */
 /* Description: */

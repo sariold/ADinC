@@ -1,8 +1,6 @@
 /* file: signals.c */
-/* author: Rares Dobre (email: r.a.dobre@student.rugl.nl)
-            Diego Sariol (email: d.r.sariol@student.rug.nl) */
-/* date: 4/2/20 */
-/* version: 4.2 */
+/* date: 5/2/20 */
+/* version: 2.4 */
 /* Description: Extra task from the digital signals assignment. Reads in signal
 input and returns the original input. */
 
