@@ -13,7 +13,7 @@
  * For the recognition of a token list the method of *recursive descent* is used.
  * It relies on the use of three functions for the recognition and processing of
  * terms, factors and expressions, respectively.
- * These three functions are definened with mutual recursion, corresponding with the
+ * These three functions are defined with mutual recursion, corresponding with the
  * structure of the BNF grammar.
  */
 
