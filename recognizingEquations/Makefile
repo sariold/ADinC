@@ -14,7 +14,10 @@ eval: scanner.c recognizeExp.c evalExp.c mainEvalExp.c
 .PHONY: clean debug-scan
 
 clean:
-	rm -f eval recog scan
+	rm -f eval recog scan eq
 
 debug-scan: scan
 	cat example_part1_input.txt | valgrind ./scan
+
+eq: mainRecogEq.c scanner.c recognizeEq.c recognizeExp.c
+	$(CC) $(CFLAGS) $^ -o $@
