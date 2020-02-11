@@ -11,7 +11,6 @@ int variableCounter(List li){
     while(li != NULL){
         if(li->tt == Identifier && first){
             strcpy(str, li->t.identifier);
-            printf("\nstring : %s\n", str);
             first=0;
             cnt++;
             li = li->next;
@@ -19,15 +18,13 @@ int variableCounter(List li){
         if(li->tt == Identifier){
             cnt++;
             flag = strcmp(str, li->t.identifier);   //flag = 0 if they are equal
-            if(!flag){
-                printf("it gets here\n\n\n\n");
+            if(flag != 0){
                 free(str);
                 return 1;
             }
         }
         li = li->next;
     }
-    printf("\ncnt=%d\n", cnt);
     if(cnt==1){
         free(str);
         return 0;
@@ -78,14 +75,15 @@ void recognizeEquations() {
   ar = readInput();
   while (ar[0] != '!') {
     tl = tokenList(ar);
-    printf("the token list is ");
-    printList(tl);
+    // printf("the token list is ");
+    // printList(tl);
     tl1 = tl;
     if (acceptEquations(&tl1) && tl1 == NULL) {
       printf("this is an equation");
       if(variableCounter(tl)){
           printf(", but not in 1 variable\n");
       }
+      else printf(" in 1 variable");
     } else {
       printf("this is not an equation\n");
     }
