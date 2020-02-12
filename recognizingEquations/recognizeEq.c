@@ -49,12 +49,12 @@ int variableCounter(List li){
     return 0;
 }
 
-
 int acceptTermEq(List *lp) {
     while(1) {
         if(*lp == NULL) {
             return 0;
         }
+        if(acceptCharacter(lp, '=')) return 0;
         if(acceptNumber(lp)) {
             if(acceptIdentifier(lp)) {
                 if(acceptCharacter(lp, '^')) {
@@ -102,7 +102,7 @@ void recognizeEquations() {
   while (ar[0] != '!') {
     tl = tokenList(ar);
     // printf("the token list is ");
-    // printList(tl);
+    printList(tl);
     tl1 = tl;
     if (acceptEquations(&tl1) && tl1 == NULL) {
       printf("this is an equation");
