@@ -5,6 +5,22 @@
 #include "recognizeEq.h"
 #include <string.h>
 
+int degree(List li){
+    int degree = 0;
+    while(li != NULL){
+        if(li->tt == Identifier){
+            li = li->next;
+            if(li->tt == Symbol && li->t.symbol == '^'){
+                li = li->next;
+                if(li->tt == Number && li->t.number > degree) degree = li->t.number;
+            }
+            else if(degree < 1) degree = 1;
+        }
+        li = li->next;
+    }
+    return degree;
+}
+
 int variableCounter(List li){
     char *str = malloc(100 * sizeof(char));
     int first=1, flag=0, cnt=0;
@@ -35,18 +51,28 @@ int variableCounter(List li){
 
 
 int acceptTermEq(List *lp) {
-    List sent = *lp;
-  if(acceptNumber(lp) && acceptIdentifier(lp) &&
-  acceptCharacter(lp, '^') && acceptNumber(lp)) return 1;
-  *lp = sent;
-  if(acceptNumber(lp) && acceptIdentifier(lp)) return 1;
-  *lp = sent;
-  if(acceptIdentifier(lp) && acceptCharacter(lp, '^') && acceptNumber(lp)) return 1;
-  *lp = sent;
-  if(acceptIdentifier(lp)) return 1;
-  *lp = sent;
-  if(acceptNumber(lp)) return 1;
-  return 0;
+    while(1) {
+        if(*lp == NULL) {
+            return 0;
+        }
+        if(acceptNumber(lp)) {
+            if(acceptIdentifier(lp)) {
+                if(acceptCharacter(lp, '^')) {
+                    if(acceptNumber(lp)) return 1;
+                     else return 0;
+                }
+                return 1;
+            }
+            return 1;
+        }
+        if(acceptIdentifier(lp)) {
+            if(acceptCharacter(lp, '^')) {
+                if(acceptNumber(lp)) return 1;
+                else return 0;
+            }
+            return 1;
+        }
+    }
 }
 
 int acceptExpressionEq(List *lp) {
@@ -83,8 +109,9 @@ void recognizeEquations() {
       if(variableCounter(tl)){
           printf(", but not in 1 variable\n");
       }
-      else printf(" in 1 variable");
-    } else {
+      else printf(" in 1 variable of degree %d\n", degree(tl));
+    }
+    else {
       printf("this is not an equation\n");
     }
     free(ar);
