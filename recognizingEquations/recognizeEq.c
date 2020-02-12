@@ -10,19 +10,13 @@ int degree(List li){
     while(li != NULL){
         if(li->tt == Identifier){
             li = li->next;
-            if(li == NULL) {
-                degree = 1;
-                break;
-            }
-            if(li->tt == Symbol && li->t.symbol == '^'){
+            if(li != NULL && li->tt == Symbol && li->t.symbol == '^'){
                 li = li->next;
-                if(li == NULL) break;
                 if(li->tt == Number && li->t.number > degree) degree = li->t.number;
             }
             else if(degree < 1) degree = 1;
         }
-        if(li == NULL) break;
-        li = li->next;
+        if(li != NULL) li = li->next;
     }
     return degree;
 }
@@ -35,25 +29,18 @@ int variableCounter(List li){
             str =  li->t.identifier;
             first=0;
             cnt++;
-            if(li == NULL) break;
             li = li->next;
         }
-        if(li == NULL) break;
-        if(li->tt == Identifier){
+        if(li != NULL && li->tt == Identifier){
             cnt++;
-            flag = strcmp(str, li->t.identifier);   //flag = 0 if they are equal
+            flag = strcmp(str, li->t.identifier);
             if(flag != 0){
                 return 1;
             }
         }
-        if(li == NULL) break;
-        li = li->next;
+        if(li != NULL)  li = li->next;
     }
-    if(cnt == 0) return 1;
-    if(cnt==1){
-        return 0;
-    }
-    return 0;
+    return (cnt == 0 ? 1 : 0);
 }
 
 int acceptTermEq(List *lp) {
@@ -87,7 +74,8 @@ int acceptExpressionEq(List *lp) {
 }
 
 int acceptEquations(List *lp){
-    return (acceptExpressionEq(lp) && acceptCharacter(lp, '=') && acceptExpressionEq(lp));
+    return (acceptExpressionEq(lp) && acceptCharacter(lp, '=')
+    && acceptExpressionEq(lp));
 }
 
 void recognizeEquations() {
@@ -97,7 +85,6 @@ void recognizeEquations() {
   ar = readInput();
   while (ar[0] != '!') {
     tl = tokenList(ar);
-    // printf("the token list is ");
     printList(tl);
     tl1 = tl;
     if (acceptEquations(&tl1) && tl1 == NULL) {
