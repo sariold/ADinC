@@ -22,11 +22,11 @@ int degree(List li){
 }
 
 int variableCounter(List li){
-    char *str = malloc(100 * sizeof(char));
+    char *str;
     int first=1, flag=0, cnt=0;
     while(li != NULL){
         if(li->tt == Identifier && first){
-            strcpy(str, li->t.identifier);
+            str =  li->t.identifier;
             first=0;
             cnt++;
             li = li->next;
@@ -35,44 +35,31 @@ int variableCounter(List li){
             cnt++;
             flag = strcmp(str, li->t.identifier);   //flag = 0 if they are equal
             if(flag != 0){
-                free(str);
                 return 1;
             }
         }
         li = li->next;
     }
+    if(cnt == 0) return 1;
     if(cnt==1){
-        free(str);
         return 0;
     }
-    free(str);
     return 0;
 }
 
 int acceptTermEq(List *lp) {
-    while(1) {
-        if(*lp == NULL) {
-            return 0;
-        }
-        if(acceptCharacter(lp, '=')) return 0;
-        if(acceptNumber(lp)) {
-            if(acceptIdentifier(lp)) {
-                if(acceptCharacter(lp, '^')) {
-                    if(acceptNumber(lp)) return 1;
-                     else return 0;
-                }
-                return 1;
-            }
-            return 1;
-        }
-        if(acceptIdentifier(lp)) {
-            if(acceptCharacter(lp, '^')) {
-                if(acceptNumber(lp)) return 1;
-                else return 0;
-            }
-            return 1;
-        }
-    }
+    List sent = *lp;
+  if(acceptNumber(lp) && acceptIdentifier(lp) &&
+  acceptCharacter(lp, '^') && acceptNumber(lp)) return 1;
+  *lp = sent;
+  if(acceptNumber(lp) && acceptIdentifier(lp)) return 1;
+  *lp = sent;
+  if(acceptIdentifier(lp) && acceptCharacter(lp, '^') && acceptNumber(lp)) return 1;
+  *lp = sent;
+  if(acceptIdentifier(lp)) return 1;
+  *lp = sent;
+  if(acceptNumber(lp)) return 1;
+  return 0;
 }
 
 int acceptExpressionEq(List *lp) {
