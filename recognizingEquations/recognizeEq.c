@@ -10,12 +10,15 @@ int degree(List li){
     while(li != NULL){
         if(li->tt == Identifier){
             li = li->next;
+            if(li == NULL) break;
             if(li->tt == Symbol && li->t.symbol == '^'){
                 li = li->next;
+                if(li == NULL) break;
                 if(li->tt == Number && li->t.number > degree) degree = li->t.number;
             }
             else if(degree < 1) degree = 1;
         }
+        if(li == NULL) break;
         li = li->next;
     }
     return degree;
@@ -29,6 +32,7 @@ int variableCounter(List li){
             str =  li->t.identifier;
             first=0;
             cnt++;
+            if(li == NULL) break;
             li = li->next;
         }
         if(li->tt == Identifier){
@@ -38,6 +42,7 @@ int variableCounter(List li){
                 return 1;
             }
         }
+        if(li == NULL) break;
         li = li->next;
     }
     if(cnt == 0) return 1;
