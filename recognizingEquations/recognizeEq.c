@@ -5,14 +5,27 @@
 #include "recognizeEq.h"
 #include <string.h>
 
+// int degree(List li){
+//     int degree = 0;
+//     while(li != NULL){
+//         if(li->tt == Identifier){
+//             li = li->next;
+//             if(li != NULL && li->tt == Symbol && li->t.symbol == '^'){
+//                 li = li->next;
+//                 if(li->tt == Number && li->t.number > degree) degree = li->t.number;
+//             }
+//             else if(degree < 1) degree = 1;
+//         }
+//         if(li != NULL) li = li->next;
+//     }
+//     return degree;
+// }
 int degree(List li){
     int degree = 0;
     while(li != NULL){
-        if(li->tt == Identifier){
-            li = li->next;
-            if(li != NULL && li->tt == Symbol && li->t.symbol == '^'){
-                li = li->next;
-                if(li->tt == Number && li->t.number > degree) degree = li->t.number;
+        if(acceptIdentifier(&li)){
+            if(acceptCharacter(&li, '^')){
+                if(li->t.number > degree) degree = li->t.number;
             }
             else if(degree < 1) degree = 1;
         }
