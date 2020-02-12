@@ -4,3 +4,7 @@
 #define RECOGNIZEEQ_H
 
 void recognizeEquations();
+int acceptEquation(List *lp);
+int acceptExpressionEq(List *lp);
+
+#endif
