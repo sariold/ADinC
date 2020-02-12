@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "scanner.h"
 #include "recognizeExp.h"
 #include "recognizeEq.h"
@@ -8,9 +9,52 @@
 // acceptIdentifi{er
 // acceptCharacter
 
-// int varCounter(List *lp) {
-//
+// int degree(List li){
+//     int degree = 0;
+//     while(li != NULL){
+//         if(li->tt == Identifier){
+//             li = li->next;
+//             if(li == NULL) break;
+//             if(li->tt == Symbol && li->t.symbol == '^'){
+//                 li = li->next;
+//                 if(li == NULL) break;
+//                 if(li->tt == Number && li->t.number > degree) degree = li->t.number;
+//             }
+//             else if(degree < 1) degree = 1;
+//         }
+//         if(li == NULL) break;
+//         li = li->next;
+//     }
+//     return degree;
 // }
+
+int variableCounter(List li){
+    char *str;
+    int first=1, flag=0, cnt=0;
+    while(li != NULL){
+        if(li->tt == Identifier && first){
+            str =  li->t.identifier;
+            first=0;
+            cnt++;
+            if(li == NULL) break;
+            li = li->next;
+        }
+        if(li->tt == Identifier){
+            cnt++;
+            flag = strcmp(str, li->t.identifier);   //flag = 0 if they are equal
+            if(flag != 0){
+                return 1;
+            }
+        }
+        if(li == NULL) break;
+        li = li->next;
+    }
+    if(cnt == 0) return 1;
+    if(cnt==1){
+        return 0;
+    }
+    return 0;
+}
 
 int acceptTermEq(List *lp) {
     while(1) {
@@ -55,7 +99,6 @@ int acceptEquation(List *lp) {
 }
 
 void recognizeEquations() {
-    int degree = -1;
   char *ar;
   List tl, tl1;
   printf("give an equation: ");
@@ -67,14 +110,19 @@ void recognizeEquations() {
     tl1 = tl;
     if (acceptEquation(&tl1) && tl1 == NULL) {
       printf("this is an equation\n");
-    } else {
-      printf("this is not an equation\n");
+      if(variableCounter(tl)){
+            printf(", but not in 1 variable\n");
+        }
+        // else printf(" in 1 variable of degree %d\n", degree(tl));
+      }
+      else {
+        printf("this is not an equation\n");
+      }
+      free(ar);
+      freeTokenList(tl);
+      printf("\ngive an equation: ");
+      ar = readInput();
     }
     free(ar);
-    freeTokenList(tl);
-    printf("\ngive an equation: ");
-    ar = readInput();
+    printf("good bye\n");
   }
-  free(ar);
-  printf("good bye\n");
-}
