@@ -10,7 +10,10 @@ int degree(List li){
     while(li != NULL){
         if(li->tt == Identifier){
             li = li->next;
-            if(li == NULL) break;
+            if(li == NULL) {
+                degree = 1;
+                break;
+            }
             if(li->tt == Symbol && li->t.symbol == '^'){
                 li = li->next;
                 if(li == NULL) break;
@@ -35,6 +38,7 @@ int variableCounter(List li){
             if(li == NULL) break;
             li = li->next;
         }
+        if(li == NULL) break;
         if(li->tt == Identifier){
             cnt++;
             flag = strcmp(str, li->t.identifier);   //flag = 0 if they are equal
