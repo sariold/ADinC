@@ -4,8 +4,9 @@
 #include <math.h>
 #include "scanner.h"
 #include "recognizeEq.h"
+#include "solveEq.h"
 
 int main(int argc, char *argv[]) {
-  recognizeEquations();
+  solveEquations();
   return 0;
 }
