@@ -13,19 +13,15 @@ double solve(List li){
     while(li != NULL){
         if(acceptCharacter(&li, '=')) equalsDetected=1;
         if(acceptIdentifier(&li)){
-            // printf("\nfound just an identifier ");
             if(equalsDetected==0) {
                 a++;
-                // printf("on the LHS\ta=%d\n", a);
             }
             else {
                 a--;
-                // printf("on the RHS\ta=%d\n", a);
             }
         }
         if(li != NULL && li->tt == Number){
             int value = li->t.number;
-            // printf("value = %d\n", value);
             li = li->next;
             if(acceptIdentifier(&li)){
                 if(equalsDetected==0) a += value;
@@ -53,7 +49,6 @@ double solve(List li){
             }
         }
         if(acceptCharacter(&li, '+')){
-            // printf("\nfound a plus\n");
             if(acceptIdentifier(&li)){
                 if(equalsDetected==0) a++;
                 else a--;
