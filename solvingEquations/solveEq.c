@@ -10,57 +10,68 @@ double solve(List li){
     double x = 0.0;
     int equalsDetected = 0, a=0, b=0;
 // We get an equation in the form ax+b = cx+d, so we restrict it to ex+f=0
-    if(acceptCharacter(&li, '=')) equalsDetected=1;
-    if(acceptIdentifier(&li)){
-        if(equalsDetected==0) a++;
-        else a--;
-    }
-    if(li != NULL && li->tt == Number){
-        int value = li->t.number;
+    while(li != NULL){
+        if(acceptCharacter(&li, '=')) equalsDetected=1;
         if(acceptIdentifier(&li)){
-            if(equalsDetected==0) a += value;
-            else a -= value;
-        } else {
-            if(equalsDetected == 0) b += value;
-            else b -= value;
-            li = li->next;
-        }
-    }
-    if(acceptCharacter(&li, '-')){
-        if(acceptIdentifier(&li)){
-            if(equalsDetected==0) a--;
-            else a++;
-        }
-        if(li != NULL && li->tt == Number){
-            int value = li->t.number;
-            if(acceptIdentifier(&li)){
-                if(equalsDetected==0) a -= value;
-                else a += value;
-            } else {
-                if(equalsDetected == 0) b -= value;
-                else b += value;
-                li = li->next;
+            // printf("\nfound just an identifier ");
+            if(equalsDetected==0) {
+                a++;
+                // printf("on the LHS\ta=%d\n", a);
+            }
+            else {
+                a--;
+                // printf("on the RHS\ta=%d\n", a);
             }
         }
-    }
-    if(acceptCharacter(&li, '+')){
-        if(acceptIdentifier(&li)){
-            if(equalsDetected==0) a++;
-            else a--;
-        }
         if(li != NULL && li->tt == Number){
             int value = li->t.number;
+            // printf("value = %d\n", value);
+            li = li->next;
             if(acceptIdentifier(&li)){
                 if(equalsDetected==0) a += value;
                 else a -= value;
             } else {
                 if(equalsDetected == 0) b += value;
                 else b -= value;
+            }
+        }
+        if(acceptCharacter(&li, '-')){
+            if(acceptIdentifier(&li)){
+                if(equalsDetected==0) a--;
+                else a++;
+            }
+            if(li != NULL && li->tt == Number){
+                int value = li->t.number;
                 li = li->next;
+                if(acceptIdentifier(&li)){
+                    if(equalsDetected==0) a -= value;
+                    else a += value;
+                } else {
+                    if(equalsDetected == 0) b -= value;
+                    else b += value;
+                }
+            }
+        }
+        if(acceptCharacter(&li, '+')){
+            // printf("\nfound a plus\n");
+            if(acceptIdentifier(&li)){
+                if(equalsDetected==0) a++;
+                else a--;
+            }
+            if(li != NULL && li->tt == Number){
+                int value = li->t.number;
+                li = li->next;
+                if(acceptIdentifier(&li)){
+                    if(equalsDetected==0) a += value;
+                    else a -= value;
+                } else {
+                    if(equalsDetected == 0) b += value;
+                    else b -= value;
+                }
             }
         }
     }
-    x = (double) -b/a;
+    x = (double)(-b)/a;
     return x;
 }
 
@@ -79,8 +90,10 @@ void solveEquations(){
         if(variableCounter(tl)){
             printf(", but not in 1 variable\n");
         }
-        else printf(" in 1 variable of degree %d\nsolution: %.3lf", degree(tl),
-    solve(tl));
+        else {
+            printf(" in 1 variable of degree %d\n", degree(tl));
+            if(degree(tl) == 1) printf("solution: %.3lf\n", solve(tl));
+        }
       }
       else {
         printf("this is not an equation\n");
