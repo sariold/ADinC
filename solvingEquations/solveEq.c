@@ -1,34 +1,67 @@
 #include <stdio.h>  /* getchar, printf */
 #include <stdlib.h> /* NULL */
+#include <string.h>
 #include "scanner.h"
 #include "recognizeExp.h"
 #include "recognizeEq.h"
-#include <string.h>
 #include "solveEq.h"
 
 double solve(List li){
-    double var;
-    int varLeftSideX=0, varLeftSide=0, varRightSideX=0, varRightSide=0, value;
-    while(li != NULL){
-        if(li->tt == Symbol){
-            if(li->t.symbol == '-'){
+    double x = 0.0;
+    int equalsDetected = 0, a=0, b=0;
+// We get an equation in the form ax+b = cx+d, so we restrict it to ex+f=0
+    if(acceptCharacter(&li, '=')) equalsDetected=1;
+    if(acceptIdentifier(&li)){
+        if(equalsDetected==0) a++;
+        else a--;
+    }
+    if(li != NULL && li->tt == Number){
+        int value = li->t.number;
+        if(acceptIdentifier(&li)){
+            if(equalsDetected==0) a += value;
+            else a -= value;
+        } else {
+            if(equalsDetected == 0) b += value;
+            else b -= value;
+            li = li->next;
+        }
+    }
+    if(acceptCharacter(&li, '-')){
+        if(acceptIdentifier(&li)){
+            if(equalsDetected==0) a--;
+            else a++;
+        }
+        if(li != NULL && li->tt == Number){
+            int value = li->t.number;
+            if(acceptIdentifier(&li)){
+                if(equalsDetected==0) a -= value;
+                else a += value;
+            } else {
+                if(equalsDetected == 0) b -= value;
+                else b += value;
                 li = li->next;
-                if(li->tt == Number){
-                    value = -1 * li->t.number;
-                    li = li->next;
-                    if(li->tt == Identifier){
-                        varLeftSideX += value;
-                    }
-                    else varLeftSide += value;
-                }
-                if(li->tt == Identifier){
-                    varLeftSideX -= 1;
-                }
             }
         }
     }
-    printf("\t%d\t%d\n", varLeftSideX, varLeftSide);
-    return 5.0;
+    if(acceptCharacter(&li, '+')){
+        if(acceptIdentifier(&li)){
+            if(equalsDetected==0) a++;
+            else a--;
+        }
+        if(li != NULL && li->tt == Number){
+            int value = li->t.number;
+            if(acceptIdentifier(&li)){
+                if(equalsDetected==0) a += value;
+                else a -= value;
+            } else {
+                if(equalsDetected == 0) b += value;
+                else b -= value;
+                li = li->next;
+            }
+        }
+    }
+    x = (double) -b/a;
+    return x;
 }
 
 

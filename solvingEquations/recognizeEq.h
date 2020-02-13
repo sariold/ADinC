@@ -7,5 +7,7 @@ int acceptEquations(List *lp);
 int acceptTermEq(List *lp);
 void recognizeEquations();
 int acceptExpressionEq(List *lp);
+int degree(List li);
+int variableCounter(List li);
 
 #endif
