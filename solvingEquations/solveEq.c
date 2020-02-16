@@ -87,7 +87,12 @@ void solveEquations(){
         }
         else {
             printf(" in 1 variable of degree %d\n", degree(tl));
-            if(degree(tl) == 1) printf("solution: %.3lf\n", solve(tl));
+            if(degree(tl) == 1) {
+                double answer = solve(tl);
+                int threeDecimals = answer * 1000;
+                double finalAnswer = threeDecimals / 1000.0;
+                printf("solution: %.3lf\n", finalAnswer);
+            }
         }
       }
       else {
