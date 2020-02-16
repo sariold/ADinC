@@ -47,7 +47,7 @@ int variableCounter(List li){
         }
         if(li != NULL)  li = li->next;
     }
-    /* If 1 is returned then there were more than 1 variables */
+    /* If cnt is 0 then there were no variables */
     return (cnt == 0 ? 1 : 0);
 }
 
