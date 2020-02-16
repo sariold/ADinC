@@ -7,7 +7,7 @@
 
 /* Function to determine the highest degree of a given equation */
 int degree(List li){
-    int degree = 1;
+    int degree = 0;
     while(li != NULL){
         if(acceptIdentifier(&li)){
             if(acceptCharacter(&li, '^')){
@@ -15,6 +15,7 @@ int degree(List li){
                 degree is set to this new value */
                 if(li->t.number > degree) degree = li->t.number;
             }
+            else if(degree < 1) degree = 1;
         }
         if(li != NULL) li = li->next;
     }
