@@ -89,9 +89,10 @@ void solveEquations(){
             printf(" in 1 variable of degree %d\n", degree(tl));
             if(degree(tl) == 1) {
                 double answer = solve(tl);
-                int threeDecimals = answer * 1000;
-                double finalAnswer = threeDecimals / 1000.0;
-                printf("solution: %.3lf\n", finalAnswer);
+                if(answer >= -0.0005 && answer <= 0.0000) {
+                    printf("solution: 0.000\n");
+                }
+                else printf("solution: %.3lf\n", answer);
             }
         }
       }
