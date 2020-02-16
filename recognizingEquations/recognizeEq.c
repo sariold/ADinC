@@ -28,16 +28,14 @@ int variableCounter(List li){
     char *str;
     int first = 1, flag = 0, cnt = 0;
     while(li != NULL){
-        /* If no identifiers have been found yet, first is set to 0 */
         if(li->tt == Identifier && first){
-            /* Set str variable to first indentifier */
+            /* Set str to point to the first indentifier */
             str =  li->t.identifier;
             first=0;
             cnt++;
             li = li->next;
         }
-        /* If first is set to 1, meaning first identifier has been found and
-        stored */
+        /* If first is set to 0, meaning first identifier has been found */
         if(li != NULL && li->tt == Identifier){
             cnt++;
             /* Flag is set to 0 if both identifiers are the same */
@@ -49,12 +47,12 @@ int variableCounter(List li){
         }
         if(li != NULL)  li = li->next;
     }
-    /* If 1 is returned then there were more than 1 identifiers */
+    /* If 1 is returned then there were more than 1 variables */
     return (cnt == 0 ? 1 : 0);
 }
 
-/* If branches to determine what kind of grammar composed expression is next on
-the token list */
+/* If branches to determine if the term in the token list matches the rules
+of the grammar */
 int acceptTermEq(List *lp) {
     /* If the first term is a natural number */
     if(acceptNumber(lp)) {
@@ -75,7 +73,7 @@ int acceptTermEq(List *lp) {
         }
         return 1;
     }
-    /* Return 0 whenever there is improper grammar terms */
+    /* Return 0 whenever there are improper grammar terms */
     return 0;
 }
 
@@ -88,7 +86,7 @@ int acceptExpressionEq(List *lp) {
   else if (!acceptTermEq(lp)) {
     return 0;
   }
-  /* Checking for + or - characters as these simple expression do not contain
+  /* Checking for + or - characters as these simple expressions do not contain
   multiplication or division */
   while (acceptCharacter(lp, '+') || acceptCharacter(lp, '-')) {
     if (!acceptTermEq(lp)) {
