@@ -6,7 +6,7 @@
 #include "recognizeEq.h"
 #include "solveEq.h"
 
-double solve(List li){
+void solve(List li){
     double x = 0.0;
     int equalsDetected = 0, a=0, b=0;
 // We get an equation in the form ax+b = cx+d, so we restrict it to ex+f=0
@@ -144,7 +144,14 @@ double solve(List li){
         }
     }
     x = (double)(-b)/a;
-    return x;
+    if(a == 0) {
+        printf("not solvable\n");
+        return;
+    }
+    else if(x >= -0.0005 && x <= 0.0000){
+        printf("solution: 0.000\n");
+    }
+    else printf("solution: %.3lf\n", x);
 }
 
 
@@ -165,11 +172,7 @@ void solveEquations(){
         else {
             printf(" in 1 variable of degree %d\n", degree(tl));
             if(degree(tl) == 1) {
-                double answer = solve(tl);
-                if(answer >= -0.0005 && answer <= 0.0000) {
-                    printf("solution: 0.000\n");
-                }
-                else printf("solution: %.3lf\n", answer);
+                solve(tl);
             }
         }
       }

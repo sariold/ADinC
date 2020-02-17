@@ -2,6 +2,6 @@
 #define EVALUATEEQ_H
 
 void solveEquations();
-double solve(List li);
+void solve(List li);
 
 #endif
