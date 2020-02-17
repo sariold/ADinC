@@ -13,36 +13,86 @@ double solve(List li){
     while(li != NULL){
         if(acceptCharacter(&li, '=')) equalsDetected=1;
         if(acceptIdentifier(&li)){
-            if(equalsDetected==0) {
-                a++;
+            if(acceptCharacter(&li, '^')){
+                if(li->t.number > 0){
+                    if(equalsDetected==0) a++;
+                    else a--;
+                }
+                else {
+                    if(equalsDetected==0) b++;
+                    else b--;
+                }
+                li = li->next;
             }
             else {
-                a--;
+                if(equalsDetected==0) a++;
+                else a--;
             }
         }
         if(li != NULL && li->tt == Number){
             int value = li->t.number;
             li = li->next;
             if(acceptIdentifier(&li)){
-                if(equalsDetected==0) a += value;
-                else a -= value;
-            } else {
+                if(acceptCharacter(&li, '^')){
+                    if(li->t.number > 0){
+                        if(equalsDetected==0) a += value;
+                        else a -= value;
+                    }
+                    else {
+                        if(equalsDetected==0) b += value;
+                        else b -= value;
+                    }
+                    li=li->next;
+                }
+                else {
+                    if(equalsDetected==0) a += value;
+                    else a -= value;
+                }
+            }
+            else {
                 if(equalsDetected == 0) b += value;
                 else b -= value;
             }
         }
         if(acceptCharacter(&li, '-')){
             if(acceptIdentifier(&li)){
-                if(equalsDetected==0) a--;
-                else a++;
+                if(acceptCharacter(&li, '^')){
+                    if(li->t.number > 0){
+                        if(equalsDetected==0) a--;
+                        else a++;
+                    }
+                    else {
+                        if(equalsDetected==0) b--;
+                        else b++;
+                    }
+                    li = li->next;
+                }
+                else{
+                    if(equalsDetected==0) a--;
+                    else a++;
+                }
             }
             if(li != NULL && li->tt == Number){
                 int value = li->t.number;
                 li = li->next;
                 if(acceptIdentifier(&li)){
-                    if(equalsDetected==0) a -= value;
-                    else a += value;
-                } else {
+                    if(acceptCharacter(&li, '^')){
+                        if(li->t.number > 0){
+                            if(equalsDetected==0) a-=value;
+                            else a+=value;
+                        }
+                        else {
+                            if(equalsDetected==0) b -= value;
+                            else b += value;
+                        }
+                        li=li->next;
+                    }
+                    else {
+                        if(equalsDetected==0) a -= value;
+                        else a += value;
+                    }
+                }
+                else {
                     if(equalsDetected == 0) b -= value;
                     else b += value;
                 }
@@ -50,16 +100,43 @@ double solve(List li){
         }
         if(acceptCharacter(&li, '+')){
             if(acceptIdentifier(&li)){
-                if(equalsDetected==0) a++;
-                else a--;
+                if(acceptCharacter(&li, '^')){
+                    if(li->t.number > 0){
+                        if(equalsDetected==0) a++;
+                        else a--;
+                    }
+                    else {
+                        if(equalsDetected==0) b++;
+                        else b--;
+                    }
+                    li = li->next;
+                }
+                else {
+                    if(equalsDetected==0) a++;
+                    else a--;
+                }
             }
             if(li != NULL && li->tt == Number){
                 int value = li->t.number;
                 li = li->next;
                 if(acceptIdentifier(&li)){
-                    if(equalsDetected==0) a += value;
-                    else a -= value;
-                } else {
+                    if(acceptCharacter(&li, '^')){
+                        if(li->t.number > 0){
+                            if(equalsDetected==0) a+=value;
+                            else a-=value;
+                        }
+                        else {
+                            if(equalsDetected==0) b += value;
+                            else b-=value;
+                        }
+                        li = li->next;
+                    }
+                    else {
+                        if(equalsDetected==0) a += value;
+                        else a -= value;
+                    }
+                }
+                else {
                     if(equalsDetected == 0) b += value;
                     else b -= value;
                 }
