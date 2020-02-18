@@ -3,5 +3,6 @@
 
 void solveEquations();
 void solve(List li);
+void solveQuads(List li);
 
 #endif
