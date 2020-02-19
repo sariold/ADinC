@@ -1,11 +1,3 @@
-#include <stdio.h>  /* getchar, printf */
-#include <stdlib.h> /* NULL */
-#include <string.h>
-#include "scanner.h"
-#include "recognizeExp.h"
-#include "recognizeEq.h"
-#include "solveEq.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
