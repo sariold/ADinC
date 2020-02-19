@@ -7,6 +7,90 @@
 #include "recognizeEq.h"
 #include "solveEq.h"
 
+void solveSystems(List li1, List li2){
+    int first = 1, second = 1;
+    List copyli1, copyli2;
+    char *firstIdentifier, *secondIdentifier;
+    copyli1 = li1;
+    copyli2 = li2;
+    while(copyli1 != NULL){
+        if(first && copyli1->tt == Identifier){
+            firstIdentifier = copyli1->t.identifier;
+            first = 0;
+            copyli1 = copyli1->next;
+        }
+        if(copyli1->tt == Identifier && strcmp(firstIdentifier, copyli1->t.identifier)!=0){
+            secondIdentifier = copyli1->t.identifier;
+            second = 0;
+            break;
+            copyli1 = copyli1->next;
+        }
+        if(copyli1 != NULL) copyli1 = copyli1->next;
+    }
+    if(second){
+        while(copyli2 != NULL){
+            if(second && copyli2->tt == Identifier && strcmp(firstIdentifier, copyli2->t.identifier)!=0){
+                secondIdentifier = copyli2->t.identifier;
+                second = 0;
+                break;
+                copyli2 = copyli2->next;
+            }
+            if(copyli2 != NULL) copyli2 = copyli2->next;
+        }
+    }
+    //Two equations, ax + by = c and dx + ey = f
+    int a=0,b=0,c=0,d=0,e=0,f=0, equalsDetected=0;
+    while(li1 != NULL){
+        if(acceptCharacter(&li1, '=')) equalsDetected=1;
+        if(li1 != NULL && li1->tt == Identifier){
+            if(strcmp(firstIdentifier, li1->t.identifier)==0){
+                if(equalsDetected==0) a++;
+                else a--;
+            }
+            if(strcmp(secondIdentifier, li1->t.identifier) == 0){
+                if(equalsDetected==0) b++;
+                else b--;
+            }
+            li1 = li1->next;
+        }
+        if(li1 != NULL && li1)
+    }
+}
+
+
+
+int twoVariableChecker(List li){
+    char *str, *str1;
+    int first=1, flag=0, cnt=0, second=1, flag1=0, differentVariables=0;
+    while(li != NULL){
+        if(li->tt == Identifier && first){
+            str =  li->t.identifier;
+            first=0;
+            cnt++;
+            li = li->next;
+            differentVariables++;
+        }
+        if(first == 0 && second && li->tt == Identifier && strcmp(str, li->t.identifier) != 0){
+            str1 = li->t.identifier;
+            second = 0;
+            cnt++;
+            li = li->next;
+            differentVariables++;
+        }
+        if(li != NULL && li->tt == Identifier){
+            cnt++;
+            flag = strcmp(str, li->t.identifier);
+            flag1 = strcmp(str1, li->t.identifier);
+            if(flag != 0 && flag2 != 0) {
+                differentVariables++;
+                return differentVariables;
+            }
+        }
+        if(li != NULL)  li = li->next;
+    }
+    return differentVariables;
+}
+
 void solve(List li){
     double x = 0.0;
     int equalsDetected = 0, a=0, b=0;
@@ -342,33 +426,45 @@ void solveQuads(List li){
 
 void solveEquations(){
     char *ar;
-    List tl, tl1;
+    List tl, tl1, tl2, tl3;
     printf("give an equation: ");
     ar = readInput();
     while (ar[0] != '!') {
       tl = tokenList(ar);
       printList(tl);
       tl1 = tl;
-      if (acceptEquations(&tl1) && tl1 == NULL) {
-        printf("this is an equation");
-        if(variableCounter(tl)){
-            printf(", but not in 1 variable\n");
-        }
-        else {
-            printf(" in 1 variable of degree %d\n", degree(tl));
-            if(degree(tl) == 1) {
-                solve(tl);
-            }
-            else if(degree(tl) == 2) {
-                solveQuads(tl);
-            }
-        }
+      printf("give an equation: ");
+      ar = readInput();
+      tl2 = tokenList(ar);
+      printList(tl2);
+      tl3=tl2;
+      if (acceptEquations(&tl1) && tl1 == NULL && acceptEquations(&tl3) && tl3 == NULL) {
+          if(twoVariableChecker(tl) < 3 && twoVariableChecker(tl2) < 3){
+
+          }
+        // // printf("this is an equation");
+        // if(variableCounter(tl)){
+        //     if(twoVariableChecker(tl)){
+        //         solveSystems(tl, tl2);
+        //     }
+        //     // printf(", but not in 1 variable\n");
+        // }
+        // else {
+        //     // printf(" in 1 variable of degree %d\n", degree(tl));
+        //     if(degree(tl) == 1) {
+        //         solve(tl);
+        //     }
+        //     else if(degree(tl) == 2) {
+        //         solveQuads(tl);
+        //     }
+        // }
       }
-      else {
-        printf("this is not an equation\n");
-      }
+      // else {
+      //   // printf("this is not an equation\n");
+      // }
       free(ar);
       freeTokenList(tl);
+      freeTokenList(tl2);
       printf("\ngive an equation: ");
       ar = readInput();
     }
