@@ -317,15 +317,19 @@ void solveQuads(List li){
             }
         }
     }
-    if(a == 0) {
+
+    double disc = ((b * b) - (4 * a * c));
+    if(disc < 0) {
         printf("not solvable\n");
         return;
     }
-    double disc = ((b * b) - (4 * a * c));
+    if(a == 0){
+        printf("solution: %.3lf\n", (double)-c/b);
+        return;
+    }
     double squared = sqrt(disc);
     x = (double) (-b + squared)/(2 * a);
     y = (double) (-b - squared)/(2 * a);
-
     if(x == y) {
         printf("solution: %.3lf\n", x);
         return;
