@@ -2,7 +2,6 @@
 
 #ifndef DICTIONARY_H
 #define DICTIONARY_H
-
 #include <stdbool.h>
 
 // maximum length for a word
@@ -21,15 +20,15 @@ typedef struct trie {
     struct trie *children[N];
 } *trie;
 
-trie newEmptyTrie();
-void addWordTrie(char word[LENGTH + 1], trie t);
-bool checkTrie(const char *word, trie d);
-void freeTrie(trie t);
-void printTrie(trie t);
-
 dict *newEmptyDict();
 void addWord(char word[LENGTH + 1], dict *d);
 bool check(const char *word, dict *d);
 void freeDict(dict *n);
 
-#endif // DICTIONARY_HDont
+void printTrie(trie t);
+trie newTrie();
+void addWordToTrie(trie t, char word[LENGTH + 1]);
+void freeTrie(trie t);
+bool checkTrie(char word[LENGTH+1], trie t);
+
+#endif // DICTIONARY_H

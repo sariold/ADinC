@@ -2,13 +2,10 @@ CC = gcc
 
 CFLAGS = -g -O2 -std=c99 -pedantic -Wall -lm
 
-speller: dictionary.c speller.c
+speller: cdictionary.c speller.c
 	$(CC) $(CFLAGS) $^ -o $@
 
 .PHONY: example check-example debug-example
-
-clean:
-	rm -f eval recog scan speller
 
 example: speller
 	./speller < exampleInput.txt
