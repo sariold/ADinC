@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
+// #include <math.h>
 #include "scanner.h"
 #include "recognizeExp.h"
 #include "recognizeEq.h"
@@ -202,233 +202,233 @@ void solve(List li){
     else printf("solution: %.3lf\n", x);
 }
 
-void solveQuads(List li){
-    double x = 0.0;
-    double y = 0.0;
-    int equalsDetected = 0, a=0, b=0, c=0;
-    while(li != NULL){
-        /* Flag to determine if reading left or right expression  */
-        if(acceptCharacter(&li, '=')) equalsDetected=1;
-        /* Identifier first */
-        if(acceptIdentifier(&li)){
-            if(acceptCharacter(&li, '^')){
-                /* Identifier to the power 2 means modify a */
-                if(li->t.number == 2){
-                    if(equalsDetected==0) a++;
-                    else a--;
-                }
-                /* Identifier to the power 1 means modify b */
-                else if(li->t.number == 1){
-                    if(equalsDetected==0) b++;
-                    else b--;
-                }
-                /* Identifier to the power 0 means modify c */
-                else {
-                    if(equalsDetected==0) c++;
-                    else c--;
-                }
-                li = li->next;
-            }
-            /* Single identifier means modify value b */
-            else {
-                if(equalsDetected==0) b++;
-                else b--;
-            }
-        }
-        /* Natural number first */
-        if(li != NULL && li->tt == Number){
-            int value = li->t.number;
-            li = li->next;
-            /* Followed by an identifier */
-            if(acceptIdentifier(&li)){
-                if(acceptCharacter(&li, '^')){
-                    /* Identifier to the power 2 means modify a */
-                    if(li->t.number == 2){
-                        if(equalsDetected==0) a += value;
-                        else a -= value;
-                    }
-                    /* Identifier to the power 1 means modify b */
-                    else if(li->t.number == 1){
-                        if(equalsDetected==0) b += value;
-                        else b -= value;
-                    }
-                    /* Identifier to the power 0 means modify c */
-                    else {
-                        if(equalsDetected==0) c += value;
-                        else c -= value;
-                    }
-                    li=li->next;
-                }
-                /* Identifier with no power means modify b */
-                else {
-                    if(equalsDetected==0) b += value;
-                    else b -= value;
-                }
-            }
-            /* Number followed by no identifier means modify c */
-            else {
-                if(equalsDetected == 0) c += value;
-                else c -= value;
-            }
-        }
-        /* Next character is a '-' sign */
-        if(acceptCharacter(&li, '-')){
-            /* Followed by an Identifier */
-            if(acceptIdentifier(&li)){
-                if(acceptCharacter(&li, '^')){
-                    /* Identifier to the power 2 means modify a */
-                    if(li->t.number == 2){
-                        if(equalsDetected==0) a--;
-                        else a++;
-                    }
-                    /* Identifier to the power 1 means modify b */
-                    else if(li->t.number == 1){
-                        if(equalsDetected==0) b--;
-                        else b++;
-                    }
-                    /* Identifier to the power 0 means modify c */
-                    else {
-                        if(equalsDetected==0) c--;
-                        else c++;
-                    }
-                    li = li->next;
-                }
-                /* Single identifier means modify b */
-                else{
-                    if(equalsDetected==0) b--;
-                    else b++;
-                }
-            }
-            /* Followed by a natural number */
-            if(li != NULL && li->tt == Number){
-                int value = li->t.number;
-                li = li->next;
-                /* Followed by an identifier */
-                if(acceptIdentifier(&li)){
-                    if(acceptCharacter(&li, '^')){
-                        /* Identifier to the power 2 means modify a */
-                        if(li->t.number == 2){
-                            if(equalsDetected==0) a-=value;
-                            else a+=value;
-                        }
-                        /* Identifier to the power 1 means modify b */
-                        else if(li->t.number == 1){
-                            if(equalsDetected==0) b-=value;
-                            else b+=value;
-                        }
-                        /* Identifier to the power 0 means modify c */
-                        else {
-                            if(equalsDetected==0) c -= value;
-                            else c += value;
-                        }
-                        li=li->next;
-                    }
-                    /* Natural number followed by identifier with no power
-                    means modify value b */
-                    else {
-                        if(equalsDetected==0) b -= value;
-                        else b += value;
-                    }
-                }
-                /* Natural number with no identifier means modify c */
-                else {
-                    if(equalsDetected == 0) c -= value;
-                    else c += value;
-                }
-            }
-        }
-        /* Next character is a '+' sign */
-        if(acceptCharacter(&li, '+')){
-            /* Identifier first */
-            if(acceptIdentifier(&li)){
-                if(acceptCharacter(&li, '^')){
-                    /* Identifier to the power 2 means modify a */
-                    if(li->t.number == 2){
-                        if(equalsDetected==0) a++;
-                        else a--;
-                    }
-                    /* Identifier to the power 1 means modify b */
-                    else if(li->t.number == 1){
-                        if(equalsDetected==0) b++;
-                        else b--;
-                    }
-                    /* Identifier to the power 0 means modify c */
-                    else {
-                        if(equalsDetected==0) c++;
-                        else c--;
-                    }
-                    li = li->next;
-                }
-                /* Single identifier means modify b */
-                else {
-                    if(equalsDetected==0) b++;
-                    else b--;
-                }
-            }
-            /* Natural number first */
-            if(li != NULL && li->tt == Number){
-                int value = li->t.number;
-                li = li->next;
-                /* Followed by an identifier */
-                if(acceptIdentifier(&li)){
-                    if(acceptCharacter(&li, '^')){
-                        /* Identifier to the power 2 means modify a */
-                        if(li->t.number == 2){
-                            if(equalsDetected==0) a+=value;
-                            else a-=value;
-                        }
-                        /* Identifier to the power 1 means modify b */
-                        else if(li->t.number == 1){
-                            if(equalsDetected==0) b+=value;
-                            else b-=value;
-                        }
-                        /* Identifier to the power 0 means modify c */
-                        else {
-                            if(equalsDetected==0) c += value;
-                            else c-=value;
-                        }
-                        li = li->next;
-                    }
-                    /* Identifier to no power  means modify b */
-                    else {
-                        if(equalsDetected==0) b += value;
-                        else b -= value;
-                    }
-                }
-                /* number followed by no identifier means modify c */
-                else {
-                    if(equalsDetected == 0) c += value;
-                    else c -= value;
-                }
-            }
-        }
-    }
-    /* Determining the discrimant of this quadratic function */
-    double disc = ((b * b) - (4 * a * c));
-    /* Discrimant less than 0 results in a not solvable due to imaginary
-    solutions */
-    if(disc < 0) {
-        printf("not solvable\n");
-        return;
-    }
-    /* If a is 0 then 0x^2 means this is a linear equation of degree 1 */
-    if(a == 0){
-        printf("solution: %.3lf\n", (double)-c/b);
-        return;
-    }
-    double squared = sqrt(disc);
-    x = (double) (-b + squared)/(2 * a);
-    y = (double) (-b - squared)/(2 * a);
-    /* Print out one solution */
-    if(x == y) {
-        printf("solution: %.3lf\n", x);
-        return;
-    }
-    /* Rounding fix to account for printing -0.000 */
-    else if(x >= -0.0005 && x <= 0.0000) x = 0.000;
-    else if(y >= -0.0005 && y <= 0.0000) y = 0.000;
-    printf("solution: %.3lf and %.3lf\n", x, y);
-}
+// void solveQuads(List li){
+//     double x = 0.0;
+//     double y = 0.0;
+//     int equalsDetected = 0, a=0, b=0, c=0;
+//     while(li != NULL){
+//         /* Flag to determine if reading left or right expression  */
+//         if(acceptCharacter(&li, '=')) equalsDetected=1;
+//         /* Identifier first */
+//         if(acceptIdentifier(&li)){
+//             if(acceptCharacter(&li, '^')){
+//                 /* Identifier to the power 2 means modify a */
+//                 if(li->t.number == 2){
+//                     if(equalsDetected==0) a++;
+//                     else a--;
+//                 }
+//                 /* Identifier to the power 1 means modify b */
+//                 else if(li->t.number == 1){
+//                     if(equalsDetected==0) b++;
+//                     else b--;
+//                 }
+//                 /* Identifier to the power 0 means modify c */
+//                 else {
+//                     if(equalsDetected==0) c++;
+//                     else c--;
+//                 }
+//                 li = li->next;
+//             }
+//             /* Single identifier means modify value b */
+//             else {
+//                 if(equalsDetected==0) b++;
+//                 else b--;
+//             }
+//         }
+//         /* Natural number first */
+//         if(li != NULL && li->tt == Number){
+//             int value = li->t.number;
+//             li = li->next;
+//             /* Followed by an identifier */
+//             if(acceptIdentifier(&li)){
+//                 if(acceptCharacter(&li, '^')){
+//                     /* Identifier to the power 2 means modify a */
+//                     if(li->t.number == 2){
+//                         if(equalsDetected==0) a += value;
+//                         else a -= value;
+//                     }
+//                     /* Identifier to the power 1 means modify b */
+//                     else if(li->t.number == 1){
+//                         if(equalsDetected==0) b += value;
+//                         else b -= value;
+//                     }
+//                     /* Identifier to the power 0 means modify c */
+//                     else {
+//                         if(equalsDetected==0) c += value;
+//                         else c -= value;
+//                     }
+//                     li=li->next;
+//                 }
+//                 /* Identifier with no power means modify b */
+//                 else {
+//                     if(equalsDetected==0) b += value;
+//                     else b -= value;
+//                 }
+//             }
+//             /* Number followed by no identifier means modify c */
+//             else {
+//                 if(equalsDetected == 0) c += value;
+//                 else c -= value;
+//             }
+//         }
+//         /* Next character is a '-' sign */
+//         if(acceptCharacter(&li, '-')){
+//             /* Followed by an Identifier */
+//             if(acceptIdentifier(&li)){
+//                 if(acceptCharacter(&li, '^')){
+//                     /* Identifier to the power 2 means modify a */
+//                     if(li->t.number == 2){
+//                         if(equalsDetected==0) a--;
+//                         else a++;
+//                     }
+//                     /* Identifier to the power 1 means modify b */
+//                     else if(li->t.number == 1){
+//                         if(equalsDetected==0) b--;
+//                         else b++;
+//                     }
+//                     /* Identifier to the power 0 means modify c */
+//                     else {
+//                         if(equalsDetected==0) c--;
+//                         else c++;
+//                     }
+//                     li = li->next;
+//                 }
+//                 /* Single identifier means modify b */
+//                 else{
+//                     if(equalsDetected==0) b--;
+//                     else b++;
+//                 }
+//             }
+//             /* Followed by a natural number */
+//             if(li != NULL && li->tt == Number){
+//                 int value = li->t.number;
+//                 li = li->next;
+//                 /* Followed by an identifier */
+//                 if(acceptIdentifier(&li)){
+//                     if(acceptCharacter(&li, '^')){
+//                         /* Identifier to the power 2 means modify a */
+//                         if(li->t.number == 2){
+//                             if(equalsDetected==0) a-=value;
+//                             else a+=value;
+//                         }
+//                         /* Identifier to the power 1 means modify b */
+//                         else if(li->t.number == 1){
+//                             if(equalsDetected==0) b-=value;
+//                             else b+=value;
+//                         }
+//                         /* Identifier to the power 0 means modify c */
+//                         else {
+//                             if(equalsDetected==0) c -= value;
+//                             else c += value;
+//                         }
+//                         li=li->next;
+//                     }
+//                     /* Natural number followed by identifier with no power
+//                     means modify value b */
+//                     else {
+//                         if(equalsDetected==0) b -= value;
+//                         else b += value;
+//                     }
+//                 }
+//                 /* Natural number with no identifier means modify c */
+//                 else {
+//                     if(equalsDetected == 0) c -= value;
+//                     else c += value;
+//                 }
+//             }
+//         }
+//         /* Next character is a '+' sign */
+//         if(acceptCharacter(&li, '+')){
+//             /* Identifier first */
+//             if(acceptIdentifier(&li)){
+//                 if(acceptCharacter(&li, '^')){
+//                     /* Identifier to the power 2 means modify a */
+//                     if(li->t.number == 2){
+//                         if(equalsDetected==0) a++;
+//                         else a--;
+//                     }
+//                     /* Identifier to the power 1 means modify b */
+//                     else if(li->t.number == 1){
+//                         if(equalsDetected==0) b++;
+//                         else b--;
+//                     }
+//                     /* Identifier to the power 0 means modify c */
+//                     else {
+//                         if(equalsDetected==0) c++;
+//                         else c--;
+//                     }
+//                     li = li->next;
+//                 }
+//                 /* Single identifier means modify b */
+//                 else {
+//                     if(equalsDetected==0) b++;
+//                     else b--;
+//                 }
+//             }
+//             /* Natural number first */
+//             if(li != NULL && li->tt == Number){
+//                 int value = li->t.number;
+//                 li = li->next;
+//                 /* Followed by an identifier */
+//                 if(acceptIdentifier(&li)){
+//                     if(acceptCharacter(&li, '^')){
+//                         /* Identifier to the power 2 means modify a */
+//                         if(li->t.number == 2){
+//                             if(equalsDetected==0) a+=value;
+//                             else a-=value;
+//                         }
+//                         /* Identifier to the power 1 means modify b */
+//                         else if(li->t.number == 1){
+//                             if(equalsDetected==0) b+=value;
+//                             else b-=value;
+//                         }
+//                         /* Identifier to the power 0 means modify c */
+//                         else {
+//                             if(equalsDetected==0) c += value;
+//                             else c-=value;
+//                         }
+//                         li = li->next;
+//                     }
+//                     /* Identifier to no power  means modify b */
+//                     else {
+//                         if(equalsDetected==0) b += value;
+//                         else b -= value;
+//                     }
+//                 }
+//                 /* number followed by no identifier means modify c */
+//                 else {
+//                     if(equalsDetected == 0) c += value;
+//                     else c -= value;
+//                 }
+//             }
+//         }
+//     }
+//     /* Determining the discrimant of this quadratic function */
+//     double disc = ((b * b) - (4 * a * c));
+//     /* Discrimant less than 0 results in a not solvable due to imaginary
+//     solutions */
+//     if(disc < 0) {
+//         printf("not solvable\n");
+//         return;
+//     }
+//     /* If a is 0 then 0x^2 means this is a linear equation of degree 1 */
+//     if(a == 0){
+//         printf("solution: %.3lf\n", (double)-c/b);
+//         return;
+//     }
+//     double squared = sqrt(disc);
+//     x = (double) (-b + squared)/(2 * a);
+//     y = (double) (-b - squared)/(2 * a);
+//     /* Print out one solution */
+//     if(x == y) {
+//         printf("solution: %.3lf\n", x);
+//         return;
+//     }
+//     /* Rounding fix to account for printing -0.000 */
+//     else if(x >= -0.0005 && x <= 0.0000) x = 0.000;
+//     else if(y >= -0.0005 && y <= 0.0000) y = 0.000;
+//     printf("solution: %.3lf and %.3lf\n", x, y);
+// }
 
 /* Function that tokenizes the user input and then checks if the token list is
 an acceptable equation */
@@ -457,9 +457,9 @@ void solveEquations(){
             }
             /* If equation is of degree 2, then the quadratic solve function
             is called */
-            else if(degree(tl) == 2) {
-                solveQuads(tl);
-            }
+            // else if(degree(tl) == 2) {
+            //     solveQuads(tl);
+            // }
         }
       }
       else {
