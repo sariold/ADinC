@@ -18,15 +18,7 @@ typedef struct dict {
 typedef struct trie {
     bool is_word;
     struct trie *children[N];
-} trie;
-
-// typedef struct trieNode *trie;
-//
-// struct trieNode {
-//     char letter;
-//     bool is_word;
-//     trie next[26];
-// }
+} *trie;
 
 dict *newEmptyDict();
 void addWord(char word[LENGTH + 1], dict *d);

@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <assert.h>
 #include "dictionary.h"
 
 dict *newEmptyDict() {
@@ -67,13 +67,15 @@ trie newTrie(){
 }
 
 void addWordToTrie(trie t, char word[LENGTH + 1]){
-    for(int i = 0; i<LENGTH+1; i++){
+    int i = 0;
+    while(word[i] != 0){
         if(t->children[word[i] - 'a'] == NULL){
             t->children[word[i] - 'a'] = newTrie();
         }
         t = t->children[word[i] - 'a'];
+        i++;
     }
-    t->is_bool=1;
+    t->is_word=1;
 }
 
 void freeTrie(trie t){
@@ -83,12 +85,24 @@ void freeTrie(trie t){
     free(t);
 }
 
+void printTrie(trie t){
+    for(int i = 0; i<N; i++){
+        if(t->children[i] != NULL){
+            printf("%c ", 'a' + i);
+            printTrie(t->children[i]);
+        }
+    }
+}
+
 bool checkTrie(char word[LENGTH+1], trie t){
-    for(int i = 0; i<LENGTH+1; i++){
+    int i = 0;
+    while(word[i] != '\0'){
         if(t->children[word[i] - 'a'] == NULL){
             return false;
         }
         t = t->children[word[i] - 'a'];
+        i++;
     }
-    return true;
+    if(t->is_word==1) return true;
+    else return false;
 }
