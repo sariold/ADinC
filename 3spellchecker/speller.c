@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
   // - alphabetical characters should be appended to the current word
   // - any other symbol should terminate the word
   // this code might be useful:
-  printTrie(new);
+  // printTrie(new);
   int index = 0;
   int c = EOF;
   getchar();
