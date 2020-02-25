@@ -6,15 +6,6 @@
 #include "recognizeEq.h"
 #include "solveEq.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include "scanner.h"
-#include "recognizeExp.h"
-#include "recognizeEq.h"
-#include "solveEq.h"
-
 void solve(List li){
     double x = 0.0;
     int equalsDetected = 0, a=0, b=0;
