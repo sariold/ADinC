@@ -86,11 +86,13 @@ void freeTrie(trie t){
 }
 
 void printTrie(trie t){
+    if(t->is_word==1)    printf("\n");
     for(int i = 0; i<N; i++){
         if(t->children[i] != NULL){
             printf("%c ", 'a' + i);
             printTrie(t->children[i]);
         }
+        // if(t->is_word == 1 ) printf("\tend of word\n");
     }
 }
 

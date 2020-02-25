@@ -24,6 +24,7 @@ dict *newEmptyDict();
 void addWord(char word[LENGTH + 1], dict *d);
 bool check(const char *word, dict *d);
 void freeDict(dict *n);
+void printTrie(trie t);
 trie newTrie();
 void addWordToTrie(trie t, char word[LENGTH + 1]);
 void freeTrie(trie t);
