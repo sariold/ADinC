@@ -68,7 +68,7 @@ trie newTrie(){
 
 void addWordToTrie(trie t, char word[LENGTH + 1]){
     int i = 0;
-    while(word[i] != 0){
+    while(word[i] != '\0'){
         if(t->children[word[i] - 'a'] == NULL){
             t->children[word[i] - 'a'] = newTrie();
         }
