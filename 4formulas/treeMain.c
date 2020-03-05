@@ -22,6 +22,18 @@ int main(int argc, char *argv[]) {
       int max = 0;
       complexity(t, &max, 0);
       printf("complexity: %d\n", max);
+      printf("simplified: ");
+      simplify(&t);
+      printTree(t);
+      printf("\n");
+      printf("translated: ");
+      translate(&t);
+      printTree(t);
+      printf("\n");
+      printf("simplified: ");
+      simplify(&t);
+      printTree(t);
+      printf("\n");
       freeTree(t);
     } else {
       printf("this is not a formula\n");
