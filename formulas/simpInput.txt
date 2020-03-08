@@ -1,0 +1,20 @@
+~(~p)
+~T
+~F
+T | p
+p | T
+F | p
+p | F
+T & p
+p & T
+F & p
+p & F
+T -> p
+F -> p
+p -> T
+p -> F
+T <-> p
+p <-> T
+F <-> p
+p <-> F
+!
