@@ -2,7 +2,7 @@
  *
  * This recognizes and makes syntax trees for the following grammar:
  *
- * <atom>     ::=  'T' | 'F' | <identifier> | '(' <formula> ')'
+ * <atom>     ::=  'T' | 'F' | <identifier> | '(' <biconditional> ')'
  * <literal>  ::=  <atom> | '~' <atom>
  * <formula>  ::=  <literal> { '&' <literal> }
  * <conjunctions> ::= <forumla> {'|' <formula>}
@@ -53,6 +53,21 @@ void translate (FormTree *t){
         translate(t);
     }
     if((*t)->tt == Symbol && (*t)->t.symbol == '<'){
+        // Token tok;
+        // tok.symbol = '~';
+        // FormTree t1 = copyTree(*t);
+        // t1->t.symbol = '&';
+        // FormTree t2 = copyTree((*t)->left);
+        // FormTree t3 = newFormTreeNode(Symbol, tok, t2, NULL);
+        // FormTree t4 = copyTree((*t)->right);
+        // FormTree t5 = newFormTreeNode(Symbol, tok, t4, NULL);
+        // tok.symbol = '&';
+        // FormTree t6 = newFormTreeNode(Symbol, tok, t3, t5);
+        // tok.symbol = '|';
+        // free(*t);
+        // // printTree(t1);
+        // *t = newFormTreeNode(Symbol, tok, t1, t6);
+        // return;
         Token tokAnd, tokOr, tokNeg;
         tokAnd.symbol = '&';
         tokOr.symbol = '|';
@@ -65,7 +80,7 @@ void translate (FormTree *t){
         FormTree translatedRight = newFormTreeNode(Symbol, tokAnd,
             newFormTreeNode(Symbol, tokNeg, t3, NULL),
             newFormTreeNode(Symbol, tokNeg, t4, NULL));
-        freeTree(*t);
+        free(*t);
         *t = newFormTreeNode(Symbol, tokOr, translatedLeft, translatedRight);
         translate(t);
     }
@@ -235,7 +250,7 @@ int treeIdentifier(List *lp, FormTree *t) {
   return 0;
 }
 
-// <atom>  ::=  'T' | 'F' | <identifier> | '(' <formula> ')'
+// <atom>  ::=  'T' | 'F' | <identifier> | '(' <biconditional> ')'
 int treeAtom(List *lp, FormTree *t) {
   if (acceptCharacter(lp,'T')) {
     Token tok;
@@ -313,6 +328,7 @@ int treeConjunction(List *lp, FormTree *t){
     return 1;
 }
 
+// <implication> ::= <conjunction> ['->' <conjunction>]
 int treeImplication(List *lp, FormTree *t){
     FormTree tL = *t;
     if(treeConjunction(lp, &tL)){
@@ -341,6 +357,7 @@ int treeImplication(List *lp, FormTree *t){
     return 0;
 }
 
+// <biconditional> ::= <implication> ['<->' <implication>]
  int treeBiconditional(List *lp, FormTree *t){
      FormTree tL = *t;
      if(treeImplication(lp, &tL)){

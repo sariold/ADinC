@@ -28,6 +28,8 @@ int treeBiconditional(List *lp, FormTree *t);
 void simplify(FormTree *t);
 void translate (FormTree *t);
 
+FormTree copyTree(FormTree t);
+
 void complexity(FormTree t, int *max, int depth);
 
 void treeFormulas();
