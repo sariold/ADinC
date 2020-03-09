@@ -25,7 +25,7 @@
 
 FormTree copyTree(FormTree t){
     if(t == NULL) return t;
-    return newFormTreeNode(t->tt, t->t, t->left, t->right);
+    return newFormTreeNode(t->tt, t->t, copyTree(t->left), copyTree(t->right));
 }
 
 void translate (FormTree *t){
@@ -80,7 +80,7 @@ void translate (FormTree *t){
         FormTree translatedRight = newFormTreeNode(Symbol, tokAnd,
             newFormTreeNode(Symbol, tokNeg, t3, NULL),
             newFormTreeNode(Symbol, tokNeg, t4, NULL));
-        free(*t);
+        freeTree(*t);
         *t = newFormTreeNode(Symbol, tokOr, translatedLeft, translatedRight);
         translate(t);
     }
