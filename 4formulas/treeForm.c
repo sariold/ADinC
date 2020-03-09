@@ -40,7 +40,7 @@ void translate (FormTree *t){
         tok.symbol = '~';
         free(*t);
         *t = newFormTreeNode(Symbol, tok, t3, NULL);
-        return;
+        translate(t);
     }
     if((*t)->tt == Symbol && (*t)->t.symbol == '-'){
         Token tok;
@@ -53,21 +53,6 @@ void translate (FormTree *t){
         translate(t);
     }
     if((*t)->tt == Symbol && (*t)->t.symbol == '<'){
-        // Token tok;
-        // tok.symbol = '~';
-        // FormTree t1 = copyTree(*t);
-        // t1->t.symbol = '&';
-        // FormTree t2 = copyTree((*t)->left);
-        // FormTree t3 = newFormTreeNode(Symbol, tok, t2, NULL);
-        // FormTree t4 = copyTree((*t)->right);
-        // FormTree t5 = newFormTreeNode(Symbol, tok, t4, NULL);
-        // tok.symbol = '&';
-        // FormTree t6 = newFormTreeNode(Symbol, tok, t3, t5);
-        // tok.symbol = '|';
-        // free(*t);
-        // // printTree(t1);
-        // *t = newFormTreeNode(Symbol, tok, t1, t6);
-        // return;
         Token tokAnd, tokOr, tokNeg;
         tokAnd.symbol = '&';
         tokOr.symbol = '|';
@@ -140,6 +125,24 @@ void translate (FormTree *t){
              free(t1);
              return;
          }
+         if(((*t)->left)->tt == Symbol && ((*t)->left)->t.symbol == 'F'){
+             FormTree t1 = *t;
+             Token tok;
+             tok.symbol = '~';
+             *t = newFormTreeNode(Symbol, tok, t1->right, NULL);
+             freeTree(t1->left);
+             free(t1);
+             return;
+         }
+         if(((*t)->right)->tt == Symbol && ((*t)->right)->t.symbol == 'F'){
+             FormTree t1 = *t;
+             Token tok;
+             tok.symbol = '~';
+             *t = newFormTreeNode(Symbol, tok, t1->left, NULL);
+             freeTree(t1->right);
+             free(t1);
+             return;
+         }
      }
      if((*t)->tt == Symbol && (*t)->t.symbol == '~'){
          if(((*t)->left)->tt == Symbol && ((*t)->left)->t.symbol == '~'){
@@ -165,8 +168,22 @@ void translate (FormTree *t){
          }
      }
      if((*t)->tt == Symbol && (*t)->t.symbol == '|'){
-         if((((*t)->left)->tt == Symbol && ((*t)->left)->t.symbol == 'T') ||
-         (((*t)->right)->tt == Symbol && ((*t)->right)->t.symbol == 'T')) {
+         // if((((*t)->left)->tt == Symbol && ((*t)->left)->t.symbol == 'T') ||
+         // (((*t)->right)->tt == Symbol && ((*t)->right)->t.symbol == 'T')) {
+         //     Token tok;
+         //     tok.symbol = 'T';
+         //     freeTree(*t);
+         //     *t = newFormTreeNode(Symbol, tok, NULL, NULL);
+         //     return;
+         // }
+         if(((*t)->left)->tt == Symbol && ((*t)->left)->t.symbol == 'T') {
+             Token tok;
+             tok.symbol = 'T';
+             freeTree(*t);
+             *t = newFormTreeNode(Symbol, tok, NULL, NULL);
+             return;
+         }
+         if(((*t)->right)->tt == Symbol && ((*t)->right)->t.symbol == 'T') {
              Token tok;
              tok.symbol = 'T';
              freeTree(*t);
@@ -203,14 +220,28 @@ void translate (FormTree *t){
              free(t1);
              return;
          }
-         if((((*t)->left)->tt == Symbol && ((*t)->left)->t.symbol == 'F') ||
-         (((*t)->right)->tt == Symbol && ((*t)->right)->t.symbol == 'F')) {
+         if(((*t)->right)->tt == Symbol && ((*t)->right)->t.symbol == 'F') {
              Token tok;
              tok.symbol = 'F';
              freeTree(*t);
              *t = newFormTreeNode(Symbol, tok, NULL, NULL);
              return;
          }
+         if(((*t)->left)->tt == Symbol && ((*t)->left)->t.symbol == 'F') {
+             Token tok;
+             tok.symbol = 'F';
+             freeTree(*t);
+             *t = newFormTreeNode(Symbol, tok, NULL, NULL);
+             return;
+         }
+         // if((((*t)->left)->tt == Symbol && ((*t)->left)->t.symbol == 'F') ||
+         // (((*t)->right)->tt == Symbol && ((*t)->right)->t.symbol == 'F')) {
+         //     Token tok;
+         //     tok.symbol = 'F';
+         //     freeTree(*t);
+         //     *t = newFormTreeNode(Symbol, tok, NULL, NULL);
+         //     return;
+         // }
      }
  }
 
