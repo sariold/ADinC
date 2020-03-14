@@ -25,19 +25,17 @@ int treeFormula(List *lp, FormTree *t);
 int treeConjunction(List *lp, FormTree *t);
 int treeImplication(List *lp, FormTree *t);
 int treeBiconditional(List *lp, FormTree *t);
+void simplify(FormTree *t);
+void translate (FormTree *t);
+
+FormTree copyTree(FormTree t);
 
 void complexity(FormTree t, int *max, int depth);
-void simplify(FormTree *t);
-void translate(FormTree *t);
 
 void treeFormulas();
 
 void freeTree(FormTree t);
 
 void printTree(FormTree t);
-
-FormTree copyTree(FormTree t);
-
-
 
 #endif
