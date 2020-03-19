@@ -45,7 +45,7 @@ void dijkstra(List neighbourList[11], int startingNode, int endingNode){
             int neighbourLocation = getHeapLocation(toDoList, neighbourList[u.id - 1]->node);
             if((toDoList.array[neighbourLocation]).pseudodistance > u.pseudodistance + neighbourList[u.id - 1]->weight){
                 (toDoList.array[neighbourLocation]).pseudodistance = u.pseudodistance + neighbourList[u.id - 1]->weight;
-                upheap(toDoList, neighbourLocation);
+                upheap(&toDoList, neighbourLocation);
             }
             // else if (neighbourList[u.id - 1].weight >  ){
             //
@@ -63,7 +63,7 @@ heapNode removeMin(Heap *hp){
     }
     n = hp->array[1];
     hp->front--;
-    hp->array[1] = hp->array[front];
+    hp->array[1] = hp->array[hp->front];
     downheap(hp, 1);
     return n;
 }
@@ -94,7 +94,7 @@ void downheap (Heap *hp, int n){
 
 void upheap(Heap *hp, int n){
     if(n > 1 && hp->array[n].pseudodistance < hp->array[n/2].pseudodistance){
-        swap(hp->array[n], hp->array[n/2]);
+        swap(&hp->array[n], &hp->array[n/2]);
         upheap(hp, n/2);
     }
 }
@@ -125,7 +125,7 @@ void enqueue(heapNode n, Heap *hp){
         doubleHeapSize(hp);
     }
     hp->array[front] = n;
-    upheap(hp, fr);
+    upheap(hp, front);
     hp->front = front + 1;
 }
 

@@ -27,7 +27,7 @@ typedef struct Heap {
 
 heapNode removeMin(Heap *hp);
 
-void swap(int *a, int *b);
+void swap(heapNode *a, heapNode *b);
 
 void downheap (Heap *hp, int n);
 
