@@ -11,19 +11,21 @@ typedef struct ListNode {
   List next;
 } ListNode;
 
+typedef struct heapNode {
+    int id;
+    int pseudodistance;
+} heapNode;
+
 typedef struct Heap {
     heapNode *array;
     int size;
     int front;
 }   Heap;
 
-typedef struct heapNode {
-    int id;
-    int pseudodistance;
-} heapNode;
 
 
-int removeMin(Heap *hp);
+
+heapNode removeMin(Heap *hp);
 
 void swap(int *a, int *b);
 
@@ -37,7 +39,7 @@ Heap makeHeap();
 
 int isEmptyHeap(Heap h);
 
-void enqueue(int n, Heap *hp);
+void enqueue(heapNode n, Heap *hp);
 
 void heapEmptyError();
 
@@ -49,6 +51,9 @@ void printList(List list);
 
 void freeList(List list);
 
+void dijkstra(List neighbourList[11], int startingNode, int endingNode);
+
+int getHeapLocation(Heap hp, int city);
 
 
 #endif

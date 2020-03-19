@@ -18,10 +18,14 @@ int main(int argc, char *argv[]) {
   for(int i = 0; i < 11; i++){
       neighbourList[i] = newList(edges, i+1);
   }
-  for(int i = 0; i< 11; i++){
-      printf("node : %d\n", i+1);
-      printList(neighbourList[i]);
-  }
+  // for(int i = 0; i< 11; i++){
+  //     printf("node : %d\n", i+1);
+  //     printList(neighbourList[i]);
+  // }
+  printf("give starting and ending node:\n");
+  int start, end;
+  scanf("%d %d", &start, &end);
+  dijkstra(neighbourList, start, end);
   for(int i = 0; i < 11; i++){
       freeList(neighbourList[i]);
   }

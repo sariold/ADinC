@@ -4,11 +4,20 @@
 #include "scanner.h"
 #include "graphs.h"
 
+int getHeapLocation(Heap hp, int city){
+    int location;
+    for(int i = 0; i < hp.front; i++){
+        if(i+1 == city) location = i;
+    }
+    return location;
+}
+
 void dijkstra(List neighbourList[11], int startingNode, int endingNode){
     int positions[11];
     int visited[11];
     for(int i = 0; i < 11; i++){
-        positions[11] = -1;
+        positions[i] = -1;
+        visited[i] = 0;
     }
     heapNode dist[11];
     for(int i = 0; i < 11; i++){
@@ -27,13 +36,20 @@ void dijkstra(List neighbourList[11], int startingNode, int endingNode){
     }
     while(!isEmptyHeap(toDoList)){
         heapNode u = removeMin(&toDoList);
+        if(u.id == endingNode){
+            printf("startingNode: %d\tendingNode:%d\tdistance:%d\n", startingNode, endingNode, u.pseudodistance);
+            return;
+        }
+        visited[u.id - 1] = 1;
         while(neighbourList[u.id - 1] != NULL){
-            if(neighbourList[u.id - 1].weight < u.pseudodistance + ){
-
+            int neighbourLocation = getHeapLocation(toDoList, neighbourList[u.id - 1]->node);
+            if((toDoList.array[neighbourLocation]).pseudodistance > u.pseudodistance + neighbourList[u.id - 1]->weight){
+                (toDoList.array[neighbourLocation]).pseudodistance = u.pseudodistance + neighbourList[u.id - 1]->weight;
+                upheap(toDoList, neighbourLocation);
             }
-            else if (neighbourList[u.id - 1].weight >  ){
-                
-            }
+            // else if (neighbourList[u.id - 1].weight >  ){
+            //
+            // }
         }
     }
 
