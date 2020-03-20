@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 #include "scanner.h"
 #include "graphs.h"
 
@@ -151,11 +152,11 @@ void dijkstra(List neighbourList[11], int startingNode, int endingNode){
     }
     Heap toDoList = makeHeap();
     for(int i = 0; i < 11; i++){
-        enqueue(dist[i], &toDoList);
+        enqueue(dist[i], &toDoList, &positions[i]);
     }
     while(!isEmptyHeap(toDoList)){
         // printHeap(toDoList);
-        heapNode u = removeMin(&toDoList);
+        heapNode u = removeMin(&toDoList, &positions[toDoList.front - 1]);
         // printf("removed node:%d\t pseudodistance:%d\n\n", u.id, u.pseudodistance);
         // printHeap(toDoList);
         visited[u.id - 1] = 1;
@@ -164,13 +165,15 @@ void dijkstra(List neighbourList[11], int startingNode, int endingNode){
             return;
         }
         while(neighbourList[u.id - 1] != NULL){
-            int neighbourLocation = getHeapLocation(toDoList, neighbourList[u.id - 1]->node);
+            int neighbourLocation = positions[neighbourList[u.id - 1]->node - 1];
+            // int neighbourLocation = getHeapLocation(toDoList, neighbourList[u.id - 1]->node);
             // printf("neighbour node in heap: %d\n", (toDoList.array[neighbourLocation]).id);
             // printf("neighbour: %d\n", neighbourList[u.id - 1]->node);
             if(visited[neighbourList[u.id - 1]->node - 1] == 0 &&  (toDoList.array[neighbourLocation]).pseudodistance > u.pseudodistance + neighbourList[u.id - 1]->weight){
                 // printf("shorter path found: %d to node: %d\n", u.pseudodistance + neighbourList[u.id - 1]->weight, (toDoList.array[neighbourLocation]).id);
                 (toDoList.array[neighbourLocation]).pseudodistance = u.pseudodistance + neighbourList[u.id - 1]->weight;
-                upheap(&toDoList, neighbourLocation);
+                upheap(&toDoList, &positions[neighbourList[u.id - 1]->node - 1]);
+                // upheap(&toDoList, neighbourLocation);
                 // printf("updated heap: ");
                 // printHeap(toDoList);
             }
@@ -180,7 +183,7 @@ void dijkstra(List neighbourList[11], int startingNode, int endingNode){
 }
 
 
-heapNode removeMin(Heap *hp){
+heapNode removeMin(Heap *hp, int *location){
     heapNode n;
     if(isEmptyHeap(*hp)){
         heapEmptyError();
@@ -188,7 +191,8 @@ heapNode removeMin(Heap *hp){
     n = hp->array[1];
     hp->front--;
     hp->array[1] = hp->array[hp->front];
-    downheap(hp, 1);
+    *location = 1;
+    downheap(hp, location);
     return n;
 }
 
@@ -198,28 +202,30 @@ void swap(heapNode *a, heapNode *b){
     *b = h;
 }
 
-void downheap (Heap *hp, int n){
+void downheap (Heap *hp, int *n){
     int fr = hp->front ;
-    int indexMax = n ;
-    if ( fr < 2* n +1 ) { /* node n is a leaf , so nothing to do */
+    int indexMax = *n ;
+    if (fr < 2 * (*n) + 1) { /* node n is a leaf , so nothing to do */
         return ;
     }
-    if (hp->array[n].pseudodistance > hp->array[2*n].pseudodistance) {
-        indexMax = 2* n ;
+    if (hp->array[*n].pseudodistance > hp->array[2*(*n)].pseudodistance) {
+        indexMax = 2 * (*n);
     }
-    if (fr > 2 * n + 1 && hp->array[indexMax].pseudodistance > hp->array[2*n+1].pseudodistance) {
-        indexMax = 2* n +1;
+    if (fr > 2 * (*n) + 1 && hp->array[indexMax].pseudodistance > hp->array[2*(*n)+1].pseudodistance) {
+        indexMax = 2 * (*n) +1;
     }
-    if (indexMax != n) {
-        swap (&( hp->array[n]),&(hp->array[indexMax]));
-        downheap(hp,indexMax);
+    if (indexMax != (*n)) {
+        swap (&( hp->array[*n]),&(hp->array[indexMax]));
+        *n = indexMax;
+        downheap(hp, n);
     }
 }
 
-void upheap(Heap *hp, int n){
-    if(n > 1 && (hp->array[n]).pseudodistance < (hp->array[n/2]).pseudodistance){
-        swap(&hp->array[n], &hp->array[n/2]);
-        upheap(hp, n/2);
+void upheap(Heap *hp, int *n){
+    if(*n > 1 && (hp->array[*n]).pseudodistance < (hp->array[(*n)/2]).pseudodistance){
+        swap(&hp->array[*n], &hp->array[(*n)/2]);
+        *n /= 2;
+        upheap(hp, n);
     }
 }
 
@@ -243,13 +249,14 @@ int isEmptyHeap(Heap h){
     return (h.front == 1);
 }
 
-void enqueue(heapNode n, Heap *hp){
+void enqueue(heapNode n, Heap *hp, int *location){
     int front = hp->front;
     if(front == hp->size){
         doubleHeapSize(hp);
     }
     hp->array[front] = n;
-    upheap(hp, front);
+    *location = front;
+    upheap(hp, location);
     hp->front = front + 1;
 }
 

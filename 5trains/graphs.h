@@ -26,13 +26,13 @@ char *readInput();
 
 void printHeap(Heap hp);
 
-heapNode removeMin(Heap *hp);
+heapNode removeMin(Heap *hp, int *location);
 
 void swap(heapNode *a, heapNode *b);
 
-void downheap (Heap *hp, int n);
+void downheap (Heap *hp, int *n);
 
-void upheap(Heap *hp, int n);
+void upheap(Heap *hp, int *n);
 
 void doubleHeapSize(Heap *hp);
 
@@ -40,7 +40,7 @@ Heap makeHeap();
 
 int isEmptyHeap(Heap h);
 
-void enqueue(heapNode n, Heap *hp);
+void enqueue(heapNode n, Heap *hp, int *location);
 
 void heapEmptyError();
 
