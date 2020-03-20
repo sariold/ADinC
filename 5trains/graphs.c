@@ -4,10 +4,129 @@
 #include "scanner.h"
 #include "graphs.h"
 
+/*
+City ID's:
+    Amsterdam: 1
+    Den Haag: 2
+    Eindhoven: 3
+    Utrecht: 4
+    Maastricht: 5
+    Nijmegen: 6
+    Zwolle: 7
+    Enschede: 8
+    Meppel: 9
+    Leeuwarden: 10
+    Groningen: 11
+In certain functions we subtract 1 from the city id's, because the numbering
+of cities starts from 1, not 0
+*/
+
+int cityToId(char *s){
+    char amsterdam[10] = "Amsterdam";
+    char haag[9] = "Den Haag";
+    char eindhoven[10] = "Eindhoven";
+    char utrecht[8] = "Utrecht";
+    char maastricht[11] = "Maastricht";
+    char nijmegen[9] = "Nijmegen";
+    char zwolle[7] = "Zwolle";
+    char enschede[9] = "Enschede";
+    char meppel[7] = "Meppel";
+    char leeuwarden[11] = "Leeuwarden";
+    char groningen[10] = "Groningen";
+    if(strcmp(s, amsterdam) == 0) return 1;
+    if(strcmp(s, haag) == 0) return 2;
+    if(strcmp(s, eindhoven) == 0) return 3;
+    if(strcmp(s, utrecht) == 0) return 4;
+    if(strcmp(s, maastricht) == 0) return 5;
+    if(strcmp(s, nijmegen) == 0) return 6;
+    if(strcmp(s, zwolle) == 0) return 7;
+    if(strcmp(s, enschede) == 0) return 8;
+    if(strcmp(s, meppel) == 0) return 9;
+    if(strcmp(s, leeuwarden) == 0) return 10;
+    if(strcmp(s, groningen) == 0) return 11;
+    return 0;
+}
+
+void printCityFromId(int id){
+    switch (id) {
+        case 1:{
+            printf("Amsterdam\n");
+            break;
+        }
+        case 2:{
+            printf("Den Haag\n");
+            break;
+        }
+        case 3:{
+            printf("Eindhoven\n");
+            break;
+        }
+        case 4:{
+            printf("Utrecht\n");
+            break;
+        }
+        case 5:{
+            printf("Maastricht\n");
+            break;
+        }
+        case 6:{
+            printf("Nijmegen\n");
+            break;
+        }
+        case 7:{
+            printf("Zwolle\n");
+            break;
+        }
+        case 8:{
+            printf("Enschede\n");
+            break;
+        }
+        case 9:{
+            printf("Meppel\n");
+            break;
+        }
+        case 10:{
+            printf("Leeuwarden\n");
+            break;
+        }
+        case 11:{
+            printf("Groningen\n");
+            break;
+        }
+    }
+}
+
+char *readInput() {
+  int strLen = 30;
+  int c = getchar();
+  int i = 0;
+  char *s = malloc((strLen+1)*sizeof(char));
+  assert( s != NULL );
+  while ( c != '\n' ) {
+    s[i] = c;
+    i++;
+    if ( i >= strLen ) { /* s is not large enough, its length is doubled */
+      strLen = 2*strLen;
+      s = realloc(s,(strLen+1)*sizeof(char));
+      assert( s != NULL );
+    }
+    c = getchar();
+  }
+  s[i] = '\0';
+  return s;
+}
+
+void printHeap(Heap hp){
+    for(int i = 0; i < hp.front; i++){
+        printf("| %d %d |", hp.array[i].id, hp.array[i].pseudodistance);
+    }
+    printf("\n");
+}
+
 int getHeapLocation(Heap hp, int city){
     int location;
     for(int i = 0; i < hp.front; i++){
-        if(i+1 == city) location = i;
+        if((hp.array[i]).id == city) location = i;
     }
     return location;
 }
@@ -35,24 +154,29 @@ void dijkstra(List neighbourList[11], int startingNode, int endingNode){
         enqueue(dist[i], &toDoList);
     }
     while(!isEmptyHeap(toDoList)){
+        // printHeap(toDoList);
         heapNode u = removeMin(&toDoList);
+        // printf("removed node:%d\t pseudodistance:%d\n\n", u.id, u.pseudodistance);
+        // printHeap(toDoList);
+        visited[u.id - 1] = 1;
         if(u.id == endingNode){
             printf("startingNode: %d\tendingNode:%d\tdistance:%d\n", startingNode, endingNode, u.pseudodistance);
             return;
         }
-        visited[u.id - 1] = 1;
         while(neighbourList[u.id - 1] != NULL){
             int neighbourLocation = getHeapLocation(toDoList, neighbourList[u.id - 1]->node);
-            if((toDoList.array[neighbourLocation]).pseudodistance > u.pseudodistance + neighbourList[u.id - 1]->weight){
+            // printf("neighbour node in heap: %d\n", (toDoList.array[neighbourLocation]).id);
+            // printf("neighbour: %d\n", neighbourList[u.id - 1]->node);
+            if(visited[neighbourList[u.id - 1]->node - 1] == 0 &&  (toDoList.array[neighbourLocation]).pseudodistance > u.pseudodistance + neighbourList[u.id - 1]->weight){
+                // printf("shorter path found: %d to node: %d\n", u.pseudodistance + neighbourList[u.id - 1]->weight, (toDoList.array[neighbourLocation]).id);
                 (toDoList.array[neighbourLocation]).pseudodistance = u.pseudodistance + neighbourList[u.id - 1]->weight;
                 upheap(&toDoList, neighbourLocation);
+                // printf("updated heap: ");
+                // printHeap(toDoList);
             }
-            // else if (neighbourList[u.id - 1].weight >  ){
-            //
-            // }
+            neighbourList[u.id - 1] = neighbourList[u.id - 1]->next;
         }
     }
-
 }
 
 
@@ -80,10 +204,10 @@ void downheap (Heap *hp, int n){
     if ( fr < 2* n +1 ) { /* node n is a leaf , so nothing to do */
         return ;
     }
-    if (hp->array[n].pseudodistance < hp->array[2*n].pseudodistance) {
+    if (hp->array[n].pseudodistance > hp->array[2*n].pseudodistance) {
         indexMax = 2* n ;
     }
-    if (fr > 2 * n + 1 && hp->array[indexMax].pseudodistance < hp->array[2*n+1].pseudodistance) {
+    if (fr > 2 * n + 1 && hp->array[indexMax].pseudodistance > hp->array[2*n+1].pseudodistance) {
         indexMax = 2* n +1;
     }
     if (indexMax != n) {
@@ -93,7 +217,7 @@ void downheap (Heap *hp, int n){
 }
 
 void upheap(Heap *hp, int n){
-    if(n > 1 && hp->array[n].pseudodistance < hp->array[n/2].pseudodistance){
+    if(n > 1 && (hp->array[n]).pseudodistance < (hp->array[n/2]).pseudodistance){
         swap(&hp->array[n], &hp->array[n/2]);
         upheap(hp, n/2);
     }
@@ -101,7 +225,7 @@ void upheap(Heap *hp, int n){
 
 void doubleHeapSize(Heap *hp){
     int newSize = 2 * hp->size;
-    hp->array = realloc(hp->array, newSize * sizeof(int));
+    hp->array = realloc(hp->array, newSize * sizeof(struct heapNode));
     assert(hp->array != NULL);
     hp->size = newSize;
 }
