@@ -29,30 +29,5 @@ int main(int argc, char *argv[]) {
   for(int i = 0; i < 11; i++){
       freeList(neighbourList[i]);
   }
-  /*Removing the disruptions*/
-  // int numberOfDisruptions=0;
-  // scanf("%d", &numberOfDisruptions);
-  // char *city1;
-  // char *city2;
-  // while(numberOfDisruptions != 0){
-  //     city1 = readInput();
-  //     city2 = readInput();
-  //     removeEdge(city1, city2);
-  //     numberOfDisruptions--;
-  // }
-  // city1 = readInput();
-  // city2 = readInput();
-  // while (city1[0] != '!') {
-  //
-  //   printPath(city1, city2);
-  //   printDuration(city1, city2);
-  //
-  //   free(city1);
-  //   free(city2);
-  //   city1 = readInput();
-  //   city2 = readInput();
-  // }
-  // free(city1);
-  // free(city2);
   return 0;
 }
