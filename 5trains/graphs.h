@@ -22,8 +22,9 @@ typedef struct Heap {
     int front;
 }   Heap;
 
+char *readInput();
 
-
+void printHeap(Heap hp);
 
 heapNode removeMin(Heap *hp);
 
