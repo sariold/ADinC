@@ -305,3 +305,19 @@ void freeList(List list){
     freeList(list->next);
     free(list);
 }
+
+void disruptor(int ar[14][3], int city1, int city2) {
+    for(int i = 0; i < 14; i++) {
+        if((ar[i][0] == city1 && ar[i][1] == city2) ||
+        (ar[i][0] == city2 && ar[i][1] == city1)) {
+            ar[i][0] = -1;
+            ar[i][1] = -1;
+        }
+    }
+}
+
+void printy(int ar[14][3]) {
+    for(int i = 0; i < 14; i++) {
+        printf("{%d,%d,%d}\n", ar[i][0], ar[i][1], ar[i][2]);
+    }
+}

@@ -4,8 +4,6 @@
 #include "scanner.h"
 #include <assert.h>
 
-
-
 int main(int argc, char *argv[]) {
   /*Current edges*/
   int edges[14][3] = {{1, 2, 51}, {1, 4, 26}, {2, 3, 89}, {3, 5, 63}, {4, 3, 47},
@@ -15,31 +13,29 @@ int main(int argc, char *argv[]) {
   for(int i = 0; i < 11; i++){
       neighbourList[i] = NULL;
   }
+  int disruptions = 0;
+  scanf("%d\n", &disruptions);
+  while(disruptions > 0) {
+          char *city1 = readInput();
+          char *city2 = readInput();
+          int cityID1 = cityToId(city1);
+          int cityID2 = cityToId(city2);
+          free(city1);
+          free(city2);
+          disruptions -= 1;
+          disruptor(edges, cityID1, cityID2);
+  }
+  printy(edges);
   for(int i = 0; i < 11; i++){
       neighbourList[i] = newList(edges, i+1);
   }
-  // for(int i = 0; i< 11; i++){
-  //     printf("node : %d\n", i+1);
-  //     printList(neighbourList[i]);
-  // }
-  printf("give starting and ending node:\n");
-  int start, end;
-  scanf("%d %d", &start, &end);
-  dijkstra(neighbourList, start, end);
+  // printf("give starting and ending node:\n");
+  // int start, end;
+  // scanf("%d %d", &start, &end);
+  // dijkstra(neighbourList, start, end);
   for(int i = 0; i < 11; i++){
       freeList(neighbourList[i]);
   }
-  /*Removing the disruptions*/
-  // int numberOfDisruptions=0;
-  // scanf("%d", &numberOfDisruptions);
-  // char *city1;
-  // char *city2;
-  // while(numberOfDisruptions != 0){
-  //     city1 = readInput();
-  //     city2 = readInput();
-  //     removeEdge(city1, city2);
-  //     numberOfDisruptions--;
-  // }
   // city1 = readInput();
   // city2 = readInput();
   // while (city1[0] != '!') {

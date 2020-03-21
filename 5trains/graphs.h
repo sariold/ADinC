@@ -22,6 +22,14 @@ typedef struct Heap {
     int front;
 }   Heap;
 
+void disruptor(int ar[14][3], int city1, int city2);
+
+void printy(int ar[14][3]);
+
+int cityToId(char *s);
+
+void printCityFromId(int id);
+
 char *readInput();
 
 void printHeap(Heap hp);
