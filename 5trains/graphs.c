@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-#include "scanner.h"
 #include "graphs.h"
 
 /*
@@ -125,7 +124,7 @@ void printHeap(Heap hp){
 }
 
 int getHeapLocation(Heap hp, int city){
-    int location;
+    int location = 0;
     for(int i = 0; i < hp.front; i++){
         if((hp.array[i]).id == city) location = i;
     }
@@ -133,10 +132,10 @@ int getHeapLocation(Heap hp, int city){
 }
 
 void dijkstra(List neighbourList[11], int startingNode, int endingNode){
-    int positions[11];
+    int path[11];
     int visited[11];
     for(int i = 0; i < 11; i++){
-        positions[i] = -1;
+        path[i] = -1;
         visited[i] = 0;
     }
     heapNode dist[11];
@@ -152,38 +151,53 @@ void dijkstra(List neighbourList[11], int startingNode, int endingNode){
     }
     Heap toDoList = makeHeap();
     for(int i = 0; i < 11; i++){
-        enqueue(dist[i], &toDoList, &positions[i]);
+        enqueue(dist[i], &toDoList);
     }
     while(!isEmptyHeap(toDoList)){
-        // printHeap(toDoList);
-        heapNode u = removeMin(&toDoList, &positions[toDoList.front - 1]);
-        // printf("removed node:%d\t pseudodistance:%d\n\n", u.id, u.pseudodistance);
-        // printHeap(toDoList);
+        heapNode u = removeMin(&toDoList);
+        if(u.pseudodistance == 99999) break;
         visited[u.id - 1] = 1;
         if(u.id == endingNode){
-            printf("startingNode: %d\tendingNode:%d\tdistance:%d\n", startingNode, endingNode, u.pseudodistance);
+            reconstructPath(path, endingNode, startingNode);
+            printf("%d\n", u.pseudodistance);
+            free(toDoList.array);
             return;
         }
-        while(neighbourList[u.id - 1] != NULL){
-            int neighbourLocation = positions[neighbourList[u.id - 1]->node - 1];
-            // int neighbourLocation = getHeapLocation(toDoList, neighbourList[u.id - 1]->node);
-            // printf("neighbour node in heap: %d\n", (toDoList.array[neighbourLocation]).id);
-            // printf("neighbour: %d\n", neighbourList[u.id - 1]->node);
-            if(visited[neighbourList[u.id - 1]->node - 1] == 0 &&  (toDoList.array[neighbourLocation]).pseudodistance > u.pseudodistance + neighbourList[u.id - 1]->weight){
-                // printf("shorter path found: %d to node: %d\n", u.pseudodistance + neighbourList[u.id - 1]->weight, (toDoList.array[neighbourLocation]).id);
-                (toDoList.array[neighbourLocation]).pseudodistance = u.pseudodistance + neighbourList[u.id - 1]->weight;
-                upheap(&toDoList, &positions[neighbourList[u.id - 1]->node - 1]);
-                // upheap(&toDoList, neighbourLocation);
-                // printf("updated heap: ");
-                // printHeap(toDoList);
+        List li = neighbourList[u.id - 1];
+        while(li != NULL){
+            int neighbourLocation = getHeapLocation(toDoList, li->node);
+            if(visited[li->node - 1] == 0 && (toDoList.array[neighbourLocation]).pseudodistance > u.pseudodistance + li->weight){
+                (toDoList.array[neighbourLocation]).pseudodistance = u.pseudodistance + li->weight;
+                path[li->node - 1] = u.id;
+                upheap(&toDoList, neighbourLocation);
             }
-            neighbourList[u.id - 1] = neighbourList[u.id - 1]->next;
+            li = li->next;
+        }
+    }
+    printf("UNREACHABLE\n");
+    free(toDoList.array);
+}
+
+void reconstructPath(int path[11], int node, int start){
+    int ar[11], j=0;
+    for(int i = 0; i < 11; i++){
+        ar[i] = -1;
+    }
+    while(node != start){
+        ar[j] = node;
+        j++;
+        node = path[node - 1];
+    }
+    ar[j] = node;
+    for(int i = 10; i >= 0; i--){
+        if(ar[i] != -1){
+            printCityFromId(ar[i]);
         }
     }
 }
 
 
-heapNode removeMin(Heap *hp, int *location){
+heapNode removeMin(Heap *hp){
     heapNode n;
     if(isEmptyHeap(*hp)){
         heapEmptyError();
@@ -191,8 +205,7 @@ heapNode removeMin(Heap *hp, int *location){
     n = hp->array[1];
     hp->front--;
     hp->array[1] = hp->array[hp->front];
-    *location = 1;
-    downheap(hp, location);
+    downheap(hp, 1);
     return n;
 }
 
@@ -202,30 +215,28 @@ void swap(heapNode *a, heapNode *b){
     *b = h;
 }
 
-void downheap (Heap *hp, int *n){
+void downheap (Heap *hp, int n){
     int fr = hp->front ;
-    int indexMax = *n ;
-    if (fr < 2 * (*n) + 1) { /* node n is a leaf , so nothing to do */
+    int indexMax = n ;
+    if ( fr < 2* n +1 ) { /* node n is a leaf , so nothing to do */
         return ;
     }
-    if (hp->array[*n].pseudodistance > hp->array[2*(*n)].pseudodistance) {
-        indexMax = 2 * (*n);
+    if (hp->array[n].pseudodistance > hp->array[2*n].pseudodistance) {
+        indexMax = 2* n ;
     }
-    if (fr > 2 * (*n) + 1 && hp->array[indexMax].pseudodistance > hp->array[2*(*n)+1].pseudodistance) {
-        indexMax = 2 * (*n) +1;
+    if (fr > 2 * n + 1 && hp->array[indexMax].pseudodistance > hp->array[2*n+1].pseudodistance) {
+        indexMax = 2* n +1;
     }
-    if (indexMax != (*n)) {
-        swap (&( hp->array[*n]),&(hp->array[indexMax]));
-        *n = indexMax;
-        downheap(hp, n);
+    if (indexMax != n) {
+        swap (&( hp->array[n]),&(hp->array[indexMax]));
+        downheap(hp,indexMax);
     }
 }
 
-void upheap(Heap *hp, int *n){
-    if(*n > 1 && (hp->array[*n]).pseudodistance < (hp->array[(*n)/2]).pseudodistance){
-        swap(&hp->array[*n], &hp->array[(*n)/2]);
-        *n /= 2;
-        upheap(hp, n);
+void upheap(Heap *hp, int n){
+    if(n > 1 && (hp->array[n]).pseudodistance < (hp->array[n/2]).pseudodistance){
+        swap(&hp->array[n], &hp->array[n/2]);
+        upheap(hp, n/2);
     }
 }
 
@@ -249,14 +260,13 @@ int isEmptyHeap(Heap h){
     return (h.front == 1);
 }
 
-void enqueue(heapNode n, Heap *hp, int *location){
+void enqueue(heapNode n, Heap *hp){
     int front = hp->front;
     if(front == hp->size){
         doubleHeapSize(hp);
     }
     hp->array[front] = n;
-    *location = front;
-    upheap(hp, location);
+    upheap(hp, front);
     hp->front = front + 1;
 }
 
@@ -318,6 +328,13 @@ void disruptor(int ar[14][3], int city1, int city2) {
 
 void printy(int ar[14][3]) {
     for(int i = 0; i < 14; i++) {
-        printf("{%d,%d,%d}\n", ar[i][0], ar[i][1], ar[i][2]);
+        if(ar[i][0] != -1 && ar[i][1] != -1){
+            printf("{");
+            printCityFromId(ar[i][0]);
+            printf(",");
+            printCityFromId(ar[i][1]);
+            printf(",");
+            printf("%d}\n", ar[i][2]);
+        }
     }
 }

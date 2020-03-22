@@ -1,8 +1,6 @@
 #ifndef GRAPHS_H
 #define GRAPHS_H
 
-#include "scanner.h"
-
 typedef struct ListNode *List;
 
 typedef struct ListNode {
@@ -22,6 +20,8 @@ typedef struct Heap {
     int front;
 }   Heap;
 
+void reconstructPath(int path[11], int node, int start);
+
 void disruptor(int ar[14][3], int city1, int city2);
 
 void printy(int ar[14][3]);
@@ -34,13 +34,13 @@ char *readInput();
 
 void printHeap(Heap hp);
 
-heapNode removeMin(Heap *hp, int *location);
+heapNode removeMin(Heap *hp);
 
 void swap(heapNode *a, heapNode *b);
 
-void downheap (Heap *hp, int *n);
+void downheap (Heap *hp, int n);
 
-void upheap(Heap *hp, int *n);
+void upheap(Heap *hp, int n);
 
 void doubleHeapSize(Heap *hp);
 
@@ -48,7 +48,7 @@ Heap makeHeap();
 
 int isEmptyHeap(Heap h);
 
-void enqueue(heapNode n, Heap *hp, int *location);
+void enqueue(heapNode n, Heap *hp);
 
 void heapEmptyError();
 
